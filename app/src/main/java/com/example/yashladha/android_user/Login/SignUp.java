@@ -2,19 +2,32 @@ package com.example.yashladha.android_user.Login;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.yashladha.android_user.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,12 +36,27 @@ public class SignUp extends Fragment {
 
     public static final String TITLE = "Sign Up";
 
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
     private TextInputLayout UsernameLayout;
     private TextInputLayout PasswordLayout;
     private TextInputLayout ConfirmPasswordLayout;
     private EditText SignUpUsername;
     private EditText SignUpPassword;
     private EditText SignUpConfirmPassword;
+    private ProgressBar progressBar;
+    private LinearLayout mainLayout;
+    private Button signUp;
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        FirebaseUser currUser = mAuth.getCurrentUser();
+        if (currUser != null) {
+            Log.i(TITLE, "User logged in already: " + currUser.getUid());
+        }
+    }
 
     public SignUp() {
         // Required empty public constructor
@@ -44,7 +72,77 @@ public class SignUp extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
+        UsernameLayout = view.findViewById(R.id.sign_up_layout_username);
+        PasswordLayout = view.findViewById(R.id.sign_up_layout_password);
+        ConfirmPasswordLayout = view.findViewById(R.id.signup_layout_confirm_password);
+        SignUpUsername = view.findViewById(R.id.sign_up_username);
+        SignUpPassword = view.findViewById(R.id.sign_up_password);
+        SignUpConfirmPassword = view.findViewById(R.id.sign_up_confirm_password);
+        signUp = view.findViewById(R.id.btn_signup);
+        progressBar = view.findViewById(R.id.sign_up_progressBar);
+        mainLayout = view.findViewById(R.id.sign_up_main);
+
+        SignUpUsername.addTextChangedListener(new MyTextWatcher(SignUpUsername));
+        SignUpPassword.addTextChangedListener(new MyTextWatcher(SignUpPassword));
+        SignUpConfirmPassword.addTextChangedListener(new MyTextWatcher(SignUpConfirmPassword));
+        mAuth = FirebaseAuth.getInstance();
+
+        signUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                unhideProgress();
+
+                if (!validateUserName()) {
+                    hideProgress();
+                    return;
+                }
+
+                if (!validatePassword()) {
+                    hideProgress();
+                    return;
+                }
+
+                if (!validateConfirmPassword()) {
+                    hideProgress();
+                    return;
+                }
+
+                String email = SignUpUsername.getText().toString();
+                String password = SignUpPassword.getText().toString();
+
+                mAuth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                hideProgress();
+                                if (task.isSuccessful()) {
+                                    Log.d(TITLE, "createUserWithEmailAndPassword:success " + task.getResult().getUser().getUid());
+                                } else {
+                                    Log.w(TITLE, "createUserWithEmailAndPassword:failure " + task.getException());
+                                    Toast.makeText(getActivity(), "SignUp Failed", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+            }
+        });
         return view;
+    }
+
+    private void hideProgress() {
+        progressBar.setVisibility(View.INVISIBLE);
+        mainLayout.setAlpha(1.0F);
+    }
+
+    private void unhideProgress() {
+        progressBar.setVisibility(View.VISIBLE);
+        mainLayout.setAlpha(0.5F);
+    }
+
+    private void clearFields() {
+        SignUpUsername.setText("");
+        SignUpPassword.setText("");
+        SignUpConfirmPassword.setText("");
     }
 
     private class MyTextWatcher implements TextWatcher {
@@ -84,7 +182,7 @@ public class SignUp extends Fragment {
     private boolean validateConfirmPassword() {
         String password = SignUpPassword.getText().toString();
         String confirmPassword = SignUpConfirmPassword.getText().toString();
-        if (password.trim().isEmpty() || confirmPassword.trim().isEmpty() || password != confirmPassword) {
+        if (password.trim().isEmpty() || confirmPassword.trim().isEmpty() || !Objects.equals(password, confirmPassword)) {
             ConfirmPasswordLayout.setError("Confirm Password is not valid");
             requestFocus(SignUpConfirmPassword);
             return false;
