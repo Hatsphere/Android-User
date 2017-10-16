@@ -2,19 +2,30 @@ package com.example.yashladha.android_user.Login;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.yashladha.android_user.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,10 +34,16 @@ public class Login extends Fragment {
 
     public static final String TITLE = "Login";
 
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
     private TextInputLayout UsernameLayout;
     private TextInputLayout PasswordLayout;
     private EditText LoginUsername;
     private EditText LoginPassword;
+    private Button login;
+    private ProgressBar progressBar;
+    private LinearLayout mainLayout;
 
     public Login() {
         // Required empty public constructor
@@ -36,6 +53,14 @@ public class Login extends Fragment {
         return new Login();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            Log.i(TITLE, "User already present");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,11 +71,61 @@ public class Login extends Fragment {
         PasswordLayout = view.findViewById(R.id.login_layout_password);
         LoginUsername = view.findViewById(R.id.login_username);
         LoginPassword = view.findViewById(R.id.login_password);
+        login = view.findViewById(R.id.btn_login);
+        progressBar = view.findViewById(R.id.login_progress_bar);
+        mainLayout = view.findViewById(R.id.login_main);
+
+        mAuth = FirebaseAuth.getInstance();
 
         LoginUsername.addTextChangedListener(new MyTextWatcher(LoginUsername));
         LoginPassword.addTextChangedListener(new MyTextWatcher(LoginPassword));
 
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                unhideProgress();
+
+                if (!validateUserName()) {
+                    hideProgress();
+                    return;
+                }
+
+                if (!validatePassword()) {
+                    hideProgress();
+                    return;
+                }
+
+                String email = LoginUsername.getText().toString();
+                String password = LoginPassword.getText().toString();
+
+                mAuth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                hideProgress();
+                                if (task.isSuccessful()) {
+                                    Log.d(TITLE, "signInWithEmailAndPassword:success " + task.getResult().getUser().getUid());
+                                } else {
+                                    Log.w(TITLE, "signInWithEmailAndPassword:failure " + task.getException());
+                                    Toast.makeText(getActivity(), "Login Failed", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
+            }
+        });
+
         return view;
+    }
+
+    private void hideProgress() {
+        progressBar.setVisibility(View.INVISIBLE);
+        mainLayout.setAlpha(1.0F);
+    }
+
+    private void unhideProgress() {
+        progressBar.setVisibility(View.VISIBLE);
+        mainLayout.setAlpha(0.5F);
     }
 
     private class MyTextWatcher implements TextWatcher {

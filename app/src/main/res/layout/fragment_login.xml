@@ -4,7 +4,20 @@
     android:layout_height="match_parent"
     tools:context="com.example.yashladha.android_user.Login.Login">
 
+    <ProgressBar
+        android:id="@+id/login_progress_bar"
+        android:elevation="8dp"
+        android:indeterminateTint="@color/colorAccent"
+        android:visibility="invisible"
+        android:background="@android:color/transparent"
+        android:indeterminate="true"
+        android:layout_gravity="center"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <LinearLayout
+        android:id="@+id/login_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="8dp"
@@ -44,6 +57,7 @@
         <Button
             android:layout_marginTop="32dp"
             android:text="Log In"
+            android:id="@+id/btn_login"
             android:foreground="?attr/selectableItemBackground"
             android:textSize="16sp"
             android:textColor="#212121"
