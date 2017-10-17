@@ -10,11 +10,12 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
-import android.widget.ArrayAdapter
+import com.code.yashladha.android_user.Portal.Adapter.ListItemAdapter
 import com.code.yashladha.android_user.Portal.Fragments.AccountsFragment
 import com.code.yashladha.android_user.Portal.Fragments.CartFragment
 import com.code.yashladha.android_user.Portal.Fragments.HomeFragment
 import com.code.yashladha.android_user.Portal.Fragments.LogsFragment
+import com.code.yashladha.android_user.Portal.Model.ListItem
 import com.code.yashladha.android_user.R
 import com.code.yashladha.android_user.R.id.*
 import kotlinx.android.synthetic.main.activity_index.*
@@ -36,7 +37,13 @@ class Index : AppCompatActivity() {
         mTitle = title
         mDrawerTitle = title
 
-        left_drawer.adapter = ArrayAdapter<String>(this, R.layout.drawer_list_item, resources.getStringArray(R.array.drawer_list_item))
+        val listEntries: ArrayList<ListItem> = ArrayList()
+        listEntries.add(ListItem(R.drawable.ic_home_black_24dp, "Home"))
+        listEntries.add(ListItem(R.mipmap.ic_launcher, "About"))
+
+        val listAdapter = ListItemAdapter(listEntries, baseContext)
+
+        left_drawer.adapter = listAdapter
 
         mDrawerToggle = object : ActionBarDrawerToggle(this, index_drawer, main_toolbar,
                 R.string.drawer_open, R.string.drawer_closed) {
