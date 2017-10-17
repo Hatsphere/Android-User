@@ -1,11 +1,11 @@
-package com.example.yashladha.android_user.Adapter;
+package com.code.yashladha.android_user.Adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.example.yashladha.android_user.Login.Login;
-import com.example.yashladha.android_user.Login.SignUp;
+import com.code.yashladha.android_user.Login.Login;
+import com.code.yashladha.android_user.Login.SignUp;
 
 /**
  * Created by yashladha on 16/10/17.

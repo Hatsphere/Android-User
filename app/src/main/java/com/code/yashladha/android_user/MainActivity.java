@@ -1,11 +1,11 @@
-package com.example.yashladha.android_user;
+package com.code.yashladha.android_user;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
-import com.example.yashladha.android_user.Adapter.LoginPageAdapter;
+import com.code.yashladha.android_user.Adapter.LoginPageAdapter;
 
 public class MainActivity extends AppCompatActivity {
 

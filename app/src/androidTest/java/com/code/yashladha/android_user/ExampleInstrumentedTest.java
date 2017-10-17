@@ -1,4 +1,4 @@
-package com.example.yashladha.android_user;
+package com.code.yashladha.android_user;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
