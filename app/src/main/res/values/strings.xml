@@ -3,4 +3,11 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="drawer_open">Drawer Open</string>
+    <string name="drawer_closed">Drawer closed</string>
+
+    <string-array name="drawer_list_item">
+        <item>Home</item>
+        <item>About</item>
+    </string-array>
 </resources>
