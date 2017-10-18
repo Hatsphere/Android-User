@@ -70,31 +70,35 @@ class Index : AppCompatActivity() {
         mDrawerToggle!!.syncState()
 
         bottom_nav_index.setOnNavigationItemSelectedListener { item ->
-            val fragment: Fragment = when (item.itemId) {
-                menu_home -> HomeFragment()
-                menu_cart_home -> CartFragment()
-                menu_account_home -> AccountsFragment()
-                menu_logs -> LogsFragment()
-                else -> HomeFragment()
-            }
-
-            Log.d(TAG, fragment.javaClass.toString())
-
-            val title: String = when (fragment::class) {
-                HomeFragment::class -> HomeFragment.TAG
-                CartFragment::class -> CartFragment.TAG
-                AccountsFragment::class -> AccountsFragment.TAG
-                LogsFragment::class -> LogsFragment.TAG
-                else -> HomeFragment.TAG
-            }
-
-            supportActionBar!!.title = title
-
-            // Fragment transaction
-            fragmentManager.inTransaction {
-                replace(R.id.frame_content_main, fragment, title)
-            }
+            bottomBarOptionSelected(item.itemId)
             true
+        }
+    }
+
+    private fun bottomBarOptionSelected(id: Int) {
+        val fragment: Fragment = when (id) {
+            menu_home -> HomeFragment()
+            menu_cart_home -> CartFragment()
+            menu_account_home -> AccountsFragment()
+            menu_logs -> LogsFragment()
+            else -> HomeFragment()
+        }
+
+        Log.d(TAG, fragment.javaClass.toString())
+
+        val title: String = when (fragment::class) {
+            HomeFragment::class -> HomeFragment.TAG
+            CartFragment::class -> CartFragment.TAG
+            AccountsFragment::class -> AccountsFragment.TAG
+            LogsFragment::class -> LogsFragment.TAG
+            else -> HomeFragment.TAG
+        }
+
+        supportActionBar!!.title = title
+
+        // Fragment transaction
+        fragmentManager.inTransaction {
+            replace(R.id.frame_content_main, fragment, title)
         }
     }
 
