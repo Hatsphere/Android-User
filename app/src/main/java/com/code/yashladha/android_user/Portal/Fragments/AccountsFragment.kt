@@ -9,6 +9,7 @@ import com.code.yashladha.android_user.R
 
 /**
  * Created by yashladha on 17/10/17.
+ * Fragment for accounts configuration of the user
  */
 
 class AccountsFragment: Fragment() {
