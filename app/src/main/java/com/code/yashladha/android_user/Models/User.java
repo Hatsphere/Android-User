@@ -1,4 +1,4 @@
-package com.example.yashladha.android_user;
+package com.code.yashladha.android_user.Models;
 
 public class User {
 
@@ -17,37 +17,35 @@ public class User {
 
     }
 
-    public long getContact()
-    {
+    public long getContact() {
         return contact;
     }
 
-    public void setContact(long contact)
-    {
+    public void setContact(long contact) {
         this.contact = contact;
     }
 
-    public String getEmail()
-    {
+    public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email)
-    {
+    public void setEmail(String email) {
         this.email = email;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public String getAddress() { return address; }
+    public String getAddress() {
+        return address;
+    }
 
-    public void setAddress(String address) { return address; }
+    public void setAddress(String address) {
+        this.address = address;
+    }
 }
