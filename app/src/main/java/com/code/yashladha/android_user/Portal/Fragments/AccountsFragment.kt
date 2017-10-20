@@ -86,7 +86,7 @@ class AccountsFragment: Fragment() {
                         viewPopup.account_address_popup_submit.isClickable = false
                     } else {
                         viewPopup.account_address_popup_submit.isClickable = true
-                        viewPopup.account_contact_layout.isErrorEnabled = false
+                        viewPopup.account_address_layout.isErrorEnabled = false
                     }
                 }
 
