@@ -1,6 +1,7 @@
 package com.code.yashladha.android_user.Login;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
@@ -20,8 +21,13 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.code.yashladha.android_user.Helper;
+import com.code.yashladha.android_user.Models.User;
+import com.code.yashladha.android_user.Portal.Index;
 import com.code.yashladha.android_user.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -108,18 +114,41 @@ public class SignUp extends Fragment {
                     return;
                 }
 
-                String email = SignUpUsername.getText().toString();
+                final String email = SignUpUsername.getText().toString();
                 String password = SignUpPassword.getText().toString();
 
                 mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
-                                hideProgress();
                                 if (task.isSuccessful()) {
-                                    Log.d(TITLE, "createUserWithEmailAndPassword:success " + task.getResult().getUser().getUid());
+                                    final String uid = task.getResult().getUser().getUid();
+                                    Log.d(TITLE, "createUserWithEmailAndPassword:success " + uid);
+                                    User user = new User(0, email, "", "");
+                                    Helper.Companion.getROOTREF().collection("users")
+                                            .document(uid)
+                                            .set(user)
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    hideProgress();
+                                                }
+                                            })
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Log.d(TITLE, "User pushed");
+                                                    callIntent(uid);
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.w(TITLE, "Error while pushing user", e);
+                                                }
+                                            });
                                 } else {
-                                    Log.w(TITLE, "createUserWithEmailAndPassword:failure " + task.getException());
+                                    Log.w(TITLE, "createUserWithEmailAndPassword:failure ", task.getException());
                                     Toast.makeText(getActivity(), "SignUp Failed", Toast.LENGTH_SHORT).show();
                                 }
                             }
@@ -127,6 +156,12 @@ public class SignUp extends Fragment {
             }
         });
         return view;
+    }
+
+    private void callIntent(String uid) {
+        Intent intent = new Intent(getContext(), Index.class);
+        intent.putExtra("UID", uid);
+        startActivity(intent);
     }
 
     private void hideProgress() {

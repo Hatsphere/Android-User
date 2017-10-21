@@ -1,6 +1,7 @@
 package com.code.yashladha.android_user.Login;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
@@ -20,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.code.yashladha.android_user.Portal.Index;
 import com.code.yashladha.android_user.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -104,7 +106,9 @@ public class Login extends Fragment {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 hideProgress();
                                 if (task.isSuccessful()) {
-                                    Log.d(TITLE, "signInWithEmailAndPassword:success " + task.getResult().getUser().getUid());
+                                    String uid = task.getResult().getUser().getUid();
+                                    Log.d(TITLE, "signInWithEmailAndPassword:success " + uid);
+                                    callIntent(uid);
                                 } else {
                                     Log.w(TITLE, "signInWithEmailAndPassword:failure " + task.getException());
                                     Toast.makeText(getActivity(), "Login Failed", Toast.LENGTH_SHORT).show();
@@ -116,6 +120,12 @@ public class Login extends Fragment {
         });
 
         return view;
+    }
+
+    private void callIntent(String uid) {
+        Intent intent = new Intent(getContext(), Index.class);
+        intent.putExtra("UID", uid);
+        startActivity(intent);
     }
 
     private void hideProgress() {

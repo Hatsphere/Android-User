@@ -15,14 +15,13 @@
         <activity
             android:name="com.code.yashladha.android_user.MainActivity"
             android:screenOrientation="portrait">
-
-        </activity>
-        <activity android:name="com.code.yashladha.android_user.Portal.Index">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name="com.code.yashladha.android_user.Portal.Index">
         </activity>
     </application>
 

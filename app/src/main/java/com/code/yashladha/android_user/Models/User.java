@@ -7,6 +7,8 @@ public class User {
     private String name;
     private String address;
 
+    public User() {
+    }
 
     public User(long contact, String email, String name, String address)
     {
