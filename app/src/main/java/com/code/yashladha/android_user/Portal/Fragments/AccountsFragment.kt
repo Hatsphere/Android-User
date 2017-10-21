@@ -249,7 +249,11 @@ class AccountsFragment: Fragment() {
 
         val window = view.context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val width = window.defaultDisplay.width * 0.80
-        val height = window.defaultDisplay.height * 0.40
+        val height: Double?
+        if (resources.configuration.orientation == 1)
+            height = window.defaultDisplay.height * 0.40
+        else
+            height = window.defaultDisplay.height * 0.55
         val focusable = true
         val popupWindow = PopupWindow(viewPopup, width.toInt(), height.toInt(), focusable)
 
