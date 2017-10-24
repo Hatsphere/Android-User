@@ -9,14 +9,14 @@
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
         tools:context="com.code.yashladha.android_user.Portal.Index">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
-            android:layout_height="56dp">
+            android:layout_height="?attr/actionBarSize">
 
             <android.support.design.widget.CollapsingToolbarLayout
                 android:layout_width="wrap_content"
@@ -36,26 +36,34 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <FrameLayout
-            android:id="@+id/frame_content_main"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignBottom="@+id/bottom_nav_index"
-            android:layout_marginTop="0dp"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-        <RelativeLayout
-            android:layout_gravity="bottom"
-            android:gravity="bottom"
+        <android.support.v4.widget.NestedScrollView
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <FrameLayout
+                    android:layout_height="match_parent"
+                    android:id="@+id/frame_content_main"
+                    android:layout_width="match_parent"/>
+
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <android.support.design.widget.BottomNavigationView
+                android:layout_alignParentBottom="true"
                 android:id="@+id/bottom_nav_index"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_alignParentBottom="true"
+                android:layout_height="?attr/actionBarSize"
                 android:background="@android:color/white"
                 android:elevation="4dp"
                 app:itemIconTint="@drawable/navbar_color"
