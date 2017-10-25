@@ -1,6 +1,5 @@
 package com.code.yashladha.android_user.Login;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -46,6 +45,7 @@ public class Login extends Fragment {
     private Button login;
     private ProgressBar progressBar;
     private LinearLayout mainLayout;
+    private FirebaseUser user;
 
     public Login() {
         // Required empty public constructor
@@ -58,7 +58,7 @@ public class Login extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        FirebaseUser user = mAuth.getCurrentUser();
+        user = mAuth.getCurrentUser();
         if (user != null) {
             Log.i(TITLE, "User already present");
         }
@@ -180,9 +180,9 @@ public class Login extends Fragment {
             PasswordLayout.setError("Password is not valid");
             requestFocus(LoginPassword);
             return false;
-        } else {
+        } else
             PasswordLayout.setErrorEnabled(false);
-        }
+
         return true;
     }
 
