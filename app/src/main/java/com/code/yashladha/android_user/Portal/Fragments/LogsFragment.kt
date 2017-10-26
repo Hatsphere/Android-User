@@ -31,48 +31,48 @@ class LogsFragment: Fragment() {
 
     val list: List<Product> = ArrayList<Product>()
 
-   CollectionReference itemRef = db.collection("Item")
+    val itemRef: CollectionReference = db.collection("Item")
 
    // Create a query against the collection.
 
-   Query query = itemRef.whereEqualTo("uid","user_id")
+    val query: Query = itemRef.whereEqualTo("uid","user_id")
 
-   Task<QuerySnapshot> task = query.get()
+    val task: Task<QuerySnapshot> = query.get()
 
     if(task.isSuccessful())
     {
         int n = task.getResult().size()
-        List<DocumentSnapshot> list = task.getResult().getDocuments()
+        val list: List<DocumentSnapshot> = task.getResult().getDocuments()
 
         for(i in n)
         {
-            Map<item_id, Item> data = list[i].getData()
+            val data: Map<item_id, Item> = list[i].getData()
 
-            Item item = data.getValue()
-            item_id = item.item_id
-            int product_id = item.pid
-            String date = item.order_date
-            int order_id = item.order_id
+            val item: Item = data.getValue()
+            val item_id = item.item_id
+            val product_id = item.pid
+            val date = item.order_date
+            val order_id = item.order_id
 
 
-            CollectionReference productRef = db.collection("Product")
+            val productRef: CollectionReference = db.collection("Product")
 
             // Create a query against the collection.
 
-            Query query1 = productRef.whereEqualTo("pid","product_id")
+            val query1: Query = productRef.whereEqualTo("pid","product_id")
 
-            Task<QuerySnapshot> task1 = query1.get()
+            val task1: Task<QuerySnapshot> = query1.get()
 
-            List<DocumentSnapshot> list1 = task1.getRsult().getDocuments()
+            val list1: List<DocumentSnapshot> = task1.getRsult().getDocuments()
 
-            Map<pid, Product> data1= list1[0].getData()
+            val data1: Map<pid, Product> = list1[0].getData()
 
-            Product pro = data1.getValue()
-            String pname = pro.p_name
-            int price = pro.price
-            int image_id = pro.image_id
+            val pro: Product = data1.getValue()
+            val pname: String = pro.p_name
+            val price: Int = pro.price
+            val image_id: Int = pro.image_id
 
-            ProductSold soldItem = new ProductSold(item_id, order_id, product_id, image_id, date,price, p_name)
+            val soldItem: ProductSold = ProductSold(item_id, order_id, product_id, image_id, date,price, p_name)
 
         }
     }
