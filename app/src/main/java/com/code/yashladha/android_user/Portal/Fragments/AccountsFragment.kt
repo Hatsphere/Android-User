@@ -250,10 +250,10 @@ class AccountsFragment: Fragment() {
         val window = view.context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val width = window.defaultDisplay.width * 0.80
         val height: Double?
-        if (resources.configuration.orientation == 1)
-            height = window.defaultDisplay.height * 0.40
+        height = if (resources.configuration.orientation == 1)
+            window.defaultDisplay.height * 0.40
         else
-            height = window.defaultDisplay.height * 0.55
+            window.defaultDisplay.height * 0.55
         val focusable = true
         val popupWindow = PopupWindow(viewPopup, width.toInt(), height.toInt(), focusable)
 
@@ -261,5 +261,9 @@ class AccountsFragment: Fragment() {
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0)
 
         return Pair(viewPopup, popupWindow)
+    }
+
+    override fun onPause() {
+        super.onPause()
     }
 }
