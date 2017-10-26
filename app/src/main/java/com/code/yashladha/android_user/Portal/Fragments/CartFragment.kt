@@ -2,11 +2,14 @@ package com.code.yashladha.android_user.Portal.Fragments
 
 import android.app.Fragment
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.code.yashladha.android_user.Models.Item
+import com.code.yashladha.android_user.Portal.Adapter.CartItemListAdapter
 import com.code.yashladha.android_user.R
 import kotlinx.android.synthetic.main.fragment_cart.view.*
 
@@ -31,6 +34,23 @@ class CartFragment: Fragment() {
         itemList = view.cart_item_list
         totalCost = view.cart_subtotal
 
+        val lm = LinearLayoutManager(view.context)
+        itemList!!.layoutManager = lm
+        itemList!!.setHasFixedSize(true)
+
+        val list = setTempData()
+        val adapter = CartItemListAdapter(list, view.context)
+        itemList!!.adapter = adapter
+
         return view
+    }
+
+    private fun setTempData(): ArrayList<Item> {
+        val items = ArrayList<Item>()
+        items.add(Item(0, "25", 0, 0, 0))
+        items.add(Item(0, "25", 0, 0, 0))
+        items.add(Item(0, "25", 0, 0, 0))
+        items.add(Item(0, "25", 0, 0, 0))
+        return items
     }
 }

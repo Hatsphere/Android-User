@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.code.yashladha.android_user.Models.Item
 import com.code.yashladha.android_user.R
+import kotlinx.android.synthetic.main.cart_item.view.*
 
 /**
  * Created by yashladha on 24/10/17.
@@ -27,7 +28,7 @@ class CartItemListAdapter(val items: ArrayList<Item>, val context: Context) : Re
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(item: Item) = with(itemView) {
-            val itemTemp = item
+            itemView.tv_cart_item_name.text = "Sample Item"
         }
     }
 
