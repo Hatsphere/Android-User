@@ -2,6 +2,7 @@ package com.code.yashladha.android_user.Portal.Adapter
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,8 +16,7 @@ import com.code.yashladha.android_user.R
 
 class CartItemListAdapter(val items: ArrayList<Item>, val context: Context) : RecyclerView.Adapter<CartItemListAdapter.ViewHolder>() {
 
-
-    override fun onBindViewHolder(holder: ViewHolder?, position: Int)  = holder!!.bind(items[position])
+    override fun onBindViewHolder(holder: ViewHolder?, position: Int) = holder!!.bind(items[position])
 
     override fun getItemCount(): Int = items.size
 
@@ -27,7 +27,7 @@ class CartItemListAdapter(val items: ArrayList<Item>, val context: Context) : Re
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(item: Item) = with(itemView) {
-
+            val itemTemp = item
         }
     }
 
