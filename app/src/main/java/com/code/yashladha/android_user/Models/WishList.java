@@ -2,20 +2,19 @@ package com.code.yashladha.android_user.Models;
 
 public class WishList
 {
-    private long uid;
+    private String uid;
     private long pid;
 
-    public WishList(long uid, long pid)
-    {
+    public WishList(String uid, long pid) {
         this.uid = uid;
         this.pid = pid;
     }
 
-    public long getUid() {
+    public String getUid() {
         return uid;
     }
 
-    public void setUid(long uid) {
+    public void setUid(String uid) {
         this.uid = uid;
     }
 

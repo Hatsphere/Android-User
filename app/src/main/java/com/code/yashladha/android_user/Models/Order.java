@@ -4,10 +4,10 @@ public class Order {
     private long order_id;
     private String status;
     private long pay_id;
-    private long uid;
+    private String uid;
     private String order_date;
 
-    public Order(long order_id, String status, long pay_id, long uid, String order_date) {
+    public Order(long order_id, String status, long pay_id, String uid, String order_date) {
         this.order_id = order_id;
         this.status = status;
         this.pay_id = pay_id;
@@ -39,11 +39,11 @@ public class Order {
         this.pay_id = pay_id;
     }
 
-    public long getUid() {
+    public String getUid() {
         return uid;
     }
 
-    public void setUid(long uid) {
+    public void setUid(String uid) {
         this.uid = uid;
     }
 

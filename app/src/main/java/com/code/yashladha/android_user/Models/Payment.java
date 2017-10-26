@@ -5,14 +5,13 @@ public class Payment {
     private String pay_mode;
     private int amount;
     private String date;
-    private long uid;
+    private String uid;
 
-
-    public Payment(long pay_id, String pay_mode, String date, int amount, long uid) {
+    public Payment(long pay_id, String pay_mode, int amount, String date, String uid) {
         this.pay_id = pay_id;
         this.pay_mode = pay_mode;
-        this.date = date;
         this.amount = amount;
+        this.date = date;
         this.uid = uid;
     }
 
@@ -48,11 +47,11 @@ public class Payment {
         this.date = date;
     }
 
-    public long getUid() {
+    public String getUid() {
         return uid;
     }
 
-    public void setUid(long uid) {
+    public void setUid(String uid) {
         this.uid = uid;
     }
 }

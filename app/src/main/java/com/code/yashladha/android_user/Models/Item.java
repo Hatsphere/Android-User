@@ -3,11 +3,11 @@ package com.code.yashladha.android_user.Models;
 public class Item {
     private long item_id;
     private String order_date;
-    private long uid;
+    private String uid;
     private long pid;
     private long order_id;
 
-    public Item(long item_id, String order_date, long uid, long pid, long order_id) {
+    public Item(long item_id, String order_date, String uid, long pid, long order_id) {
         this.item_id = item_id;
         this.order_date = order_date;
         this.uid = uid;
@@ -31,11 +31,11 @@ public class Item {
         this.order_date = order_date;
     }
 
-    public long getUid() {
+    public String getUid() {
         return uid;
     }
 
-    public void setUid(long uid) {
+    public void setUid(String uid) {
         this.uid = uid;
     }
 
