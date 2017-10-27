@@ -55,6 +55,8 @@
             </LinearLayout>
 
             <Button
+                android:elevation="8dp"
+                android:background="@drawable/cart_checkout_btn"
                 android:layout_weight="1"
                 android:text="Checkout"
                 android:layout_width="match_parent"
