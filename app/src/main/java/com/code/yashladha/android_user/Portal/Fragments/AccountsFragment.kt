@@ -58,6 +58,8 @@ class AccountsFragment : Fragment() {
         contactNo = view.account_tv_contact
         address = view.account_tv_address
 
+        updateUI(view)
+
         name!!.setOnClickListener {
             initiateNamePopup(view)
         }
@@ -75,6 +77,16 @@ class AccountsFragment : Fragment() {
         }
 
         return view
+    }
+
+    private fun updateUI(view: View) {
+        userInfoRef.get().addOnCompleteListener { task ->
+            val result = task.result.data
+            view.account_name_text.text = result["name"] as CharSequence
+            view.account_email_text.text = result["email"] as CharSequence
+            contactNo!!.text = result["contact"].toString()
+            address!!.text = result["address"] as CharSequence
+        }
     }
 
     private fun initiateAddressPopup(view: View) {
@@ -106,11 +118,12 @@ class AccountsFragment : Fragment() {
 
             viewPopup.account_address_popup_submit.setOnClickListener {
                 val addressText: String = viewPopup.account_address_popup_address.text.toString()
-                userInfoRef.update("name", addressText).addOnCompleteListener {
+                userInfoRef.update("address", addressText).addOnCompleteListener {
                     accounts_main_layout.alpha = 1.0F
                     popupWindow.dismiss()
                 }.addOnSuccessListener {
                     Toast.makeText(view.context, "Address updated!", Toast.LENGTH_SHORT).show()
+                    address!!.text = addressText
                 }.addOnFailureListener {
                     Log.e(TAG, "Error occurred while updating address")
                 }
@@ -156,12 +169,13 @@ class AccountsFragment : Fragment() {
             })
 
             viewPopup.account_contact_popup_submit.setOnClickListener {
-                val contactnumber = viewPopup.account_contact_popup_contact.text.toString().toLong()
-                userInfoRef.update("name", contactnumber).addOnCompleteListener {
+                val contactnumber = viewPopup.account_contact_popup_contact.text.toString()
+                userInfoRef.update("name", contactnumber.toLong()).addOnCompleteListener {
                     accounts_main_layout.alpha = 1.0F
                     popupWindow.dismiss()
                 }.addOnSuccessListener {
                     Toast.makeText(view.context, "Contact updated!", Toast.LENGTH_SHORT).show()
+                    contactNo!!.text = contactnumber
                 }.addOnFailureListener {
                     Log.e(TAG, "Error occurred while updating contact number")
                 }
@@ -219,6 +233,7 @@ class AccountsFragment : Fragment() {
                     popupWindow.dismiss()
                 }.addOnSuccessListener {
                     Toast.makeText(view.context, "Email updated!", Toast.LENGTH_SHORT).show()
+                    view.account_email_text.text = tempEmail
                 }.addOnFailureListener {
                     Log.e(TAG, "Error occurred while updating Email")
                 }
@@ -268,6 +283,7 @@ class AccountsFragment : Fragment() {
                     popupWindow.dismiss()
                 }.addOnSuccessListener {
                     Toast.makeText(view.context, "Name updated!", Toast.LENGTH_SHORT).show()
+                    view.account_name_text.text = tempName
                 }.addOnFailureListener {
                     Log.e(TAG, "Error occurred while updating Name")
                 }
