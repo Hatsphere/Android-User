@@ -18,19 +18,19 @@
             android:layout_height="120dp">
 
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/floatingActionButton3"
+                android:id="@+id/imageSelectionFab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"
+                android:focusable="true"
                 app:fabSize="mini"
-                android:src="@drawable/ic_camera_enhance_black_24dp"
-                app:layout_constraintBottom_toBottomOf="@+id/circularImageView"
+                app:layout_constraintBottom_toBottomOf="@+id/circularProfileImage"
                 android:layout_marginBottom="0dp"
-                android:layout_marginLeft="56dp"
-                app:layout_constraintLeft_toLeftOf="@+id/circularImageView" />
+                android:layout_marginStart="56dp"
+                app:layout_constraintLeft_toLeftOf="@+id/circularProfileImage" />
 
             <com.mikhaellopez.circularimageview.CircularImageView
-                android:id="@+id/circularImageView"
+                android:id="@+id/circularProfileImage"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:src="@mipmap/ic_launcher"

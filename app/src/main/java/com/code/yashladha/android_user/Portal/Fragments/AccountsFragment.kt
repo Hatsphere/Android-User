@@ -1,10 +1,16 @@
 package com.code.yashladha.android_user.Portal.Fragments
 
+import android.app.Activity
 import android.app.Fragment
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.DocumentsContract
+import android.provider.MediaStore
 import android.support.annotation.RequiresApi
+import android.support.design.widget.FloatingActionButton
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
@@ -18,6 +24,9 @@ import android.widget.Toast
 import com.code.yashladha.android_user.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.mikhaellopez.circularimageview.CircularImageView
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.account_address_popup.*
 import kotlinx.android.synthetic.main.account_address_popup.view.*
 import kotlinx.android.synthetic.main.account_contact_popup.*
@@ -28,6 +37,7 @@ import kotlinx.android.synthetic.main.account_name_popup.*
 import kotlinx.android.synthetic.main.account_name_popup.view.*
 import kotlinx.android.synthetic.main.fragment_accounts.*
 import kotlinx.android.synthetic.main.fragment_accounts.view.*
+import java.io.File
 
 /**
  * Created by yashladha on 17/10/17.
@@ -40,14 +50,18 @@ class AccountsFragment : Fragment() {
         val TAG = "AccountsFragment"
     }
 
+    private val PICK_PHOTO = 1
     private var name: ImageView? = null
     private var email: ImageView? = null
     private var contactNo: TextView? = null
     private var address: TextView? = null
+    private var profileCircular: CircularImageView? = null
+    private var imageSelect: FloatingActionButton? = null
     private val user = FirebaseAuth.getInstance().currentUser
     private val firestore = FirebaseFirestore.getInstance()
     private val userLoc = "users/" + user!!.uid
     private val userInfoRef = firestore.document(userLoc)
+    private val storageRef = FirebaseStorage.getInstance().getReference()
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -57,6 +71,8 @@ class AccountsFragment : Fragment() {
         email = view.account_iv_email
         contactNo = view.account_tv_contact
         address = view.account_tv_address
+        imageSelect = view.imageSelectionFab
+        profileCircular = view.circularProfileImage
 
         updateUI(view)
 
@@ -76,7 +92,64 @@ class AccountsFragment : Fragment() {
             initiateAddressPopup(view)
         }
 
+        imageSelect!!.setOnClickListener {
+            selectImage(view)
+        }
+
         return view
+    }
+
+    private fun selectImage(view: View?) {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "image/*"
+        startActivityForResult(intent, PICK_PHOTO)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PICK_PHOTO && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                val result = data.data
+                val filePath = getPathFromURI(result)
+                val fileUri = Uri.fromFile(File(filePath))
+
+                val profileImageRef = storageRef.child("/users/" + fileUri.lastPathSegment)
+                profileImageRef.putFile(fileUri)
+                        .addOnSuccessListener { taskSnapshot ->
+                            val downloadUrl = taskSnapshot.downloadUrl
+                            userInfoRef
+                                    .update("profileImage", downloadUrl.toString())
+                                    .addOnSuccessListener {
+                                        Log.i("profileImageRef", "Image uploaded successfully")
+                                    }
+                                    .addOnFailureListener {
+                                        Log.e("profileImageRef", "Error occurred")
+                                    }
+                        }
+                        .addOnFailureListener {
+                            Toast.makeText(activity.applicationContext,
+                                    "Error while updating image",
+                                    Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+            }
+        }
+    }
+
+    private fun getPathFromURI(data: Uri?): String? {
+        val wholeId = DocumentsContract.getDocumentId(data)
+        val id = wholeId.split(":")[1]
+        val filePathColumn = Array(1, { MediaStore.Images.Media.DATA })
+        val sel = MediaStore.Images.Media._ID + "=?"
+        val cursor = activity.contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, filePathColumn, sel, Array(1, { id }), null)
+        val columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        if (cursor.moveToFirst()) {
+            val filePath = cursor.getString(columnIndex)
+            cursor.close()
+            return filePath
+        }
+        return null
     }
 
     private fun updateUI(view: View) {
@@ -86,6 +159,8 @@ class AccountsFragment : Fragment() {
             view.account_email_text.text = result["email"] as CharSequence
             contactNo!!.text = result["contact"].toString()
             address!!.text = result["address"] as CharSequence
+            val downloadUri = result["profileImage"]!!.toString()
+            Picasso.with(view.context).load(downloadUri).into(profileCircular)
         }
     }
 
@@ -170,7 +245,7 @@ class AccountsFragment : Fragment() {
 
             viewPopup.account_contact_popup_submit.setOnClickListener {
                 val contactnumber = viewPopup.account_contact_popup_contact.text.toString()
-                userInfoRef.update("name", contactnumber.toLong()).addOnCompleteListener {
+                userInfoRef.update("contact", contactnumber.toLong()).addOnCompleteListener {
                     accounts_main_layout.alpha = 1.0F
                     popupWindow.dismiss()
                 }.addOnSuccessListener {
@@ -228,7 +303,7 @@ class AccountsFragment : Fragment() {
 
             viewPopup.account_email_popup_submit.setOnClickListener {
                 val tempEmail = viewPopup.account_email_popup_email.text.toString()
-                userInfoRef.update("name", tempEmail).addOnCompleteListener {
+                userInfoRef.update("email", tempEmail).addOnCompleteListener {
                     accounts_main_layout.alpha = 1.0F
                     popupWindow.dismiss()
                 }.addOnSuccessListener {
