@@ -14,7 +14,10 @@ import android.view.*
 import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.TextView
+import android.widget.Toast
 import com.code.yashladha.android_user.R
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.account_address_popup.*
 import kotlinx.android.synthetic.main.account_address_popup.view.*
 import kotlinx.android.synthetic.main.account_contact_popup.*
@@ -31,16 +34,20 @@ import kotlinx.android.synthetic.main.fragment_accounts.view.*
  * Fragment for accounts configuration of the user
  */
 
-class AccountsFragment: Fragment() {
+class AccountsFragment : Fragment() {
 
     companion object {
         val TAG = "AccountsFragment"
     }
 
-    private var name : ImageView? = null
-    private var email : ImageView? = null
-    private var contactNo : TextView? = null
-    private var address : TextView? = null
+    private var name: ImageView? = null
+    private var email: ImageView? = null
+    private var contactNo: TextView? = null
+    private var address: TextView? = null
+    private val user = FirebaseAuth.getInstance().currentUser
+    private val firestore = FirebaseFirestore.getInstance()
+    private val userLoc = "users/" + user!!.uid
+    private val userInfoRef = firestore.document(userLoc)
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -74,7 +81,7 @@ class AccountsFragment: Fragment() {
         try {
             val (viewPopup, popupWindow) = popUpCreator(view, R.layout.account_address_popup, account_address_popup)
 
-            viewPopup.account_address_popup_address.addTextChangedListener(object: TextWatcher {
+            viewPopup.account_address_popup_address.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(p0: Editable?) {
                     validateAddress()
                 }
@@ -98,13 +105,20 @@ class AccountsFragment: Fragment() {
             })
 
             viewPopup.account_address_popup_submit.setOnClickListener {
-                accounts_main_layout.alpha = 1.0F
-                popupWindow.dismiss()
+                val addressText: String = viewPopup.account_address_popup_address.text.toString()
+                userInfoRef.update("name", addressText).addOnCompleteListener {
+                    accounts_main_layout.alpha = 1.0F
+                    popupWindow.dismiss()
+                }.addOnSuccessListener {
+                    Toast.makeText(view.context, "Address updated!", Toast.LENGTH_SHORT).show()
+                }.addOnFailureListener {
+                    Log.e(TAG, "Error occurred while updating address")
+                }
             }
 
             viewPopup.account_address_cancel.setOnClickListener {
-                popupWindow.dismiss()
                 accounts_main_layout.alpha = 1.0F
+                popupWindow.dismiss()
             }
         } catch (e: Exception) {
             Log.e(TAG, e.message)
@@ -115,7 +129,7 @@ class AccountsFragment: Fragment() {
         try {
             val (viewPopup, popupWindow) = popUpCreator(view, R.layout.account_contact_popup, account_contact_popup)
 
-            viewPopup.account_contact_popup_contact.addTextChangedListener(object: TextWatcher {
+            viewPopup.account_contact_popup_contact.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(p0: Editable?) {
                     validatePhone()
                 }
@@ -142,8 +156,15 @@ class AccountsFragment: Fragment() {
             })
 
             viewPopup.account_contact_popup_submit.setOnClickListener {
-                popupWindow.dismiss()
-                accounts_main_layout.alpha = 1.0F
+                val contactnumber = viewPopup.account_contact_popup_contact.text.toString().toLong()
+                userInfoRef.update("name", contactnumber).addOnCompleteListener {
+                    accounts_main_layout.alpha = 1.0F
+                    popupWindow.dismiss()
+                }.addOnSuccessListener {
+                    Toast.makeText(view.context, "Contact updated!", Toast.LENGTH_SHORT).show()
+                }.addOnFailureListener {
+                    Log.e(TAG, "Error occurred while updating contact number")
+                }
             }
 
             viewPopup.account_contact_cancel.setOnClickListener {
@@ -160,7 +181,7 @@ class AccountsFragment: Fragment() {
         try {
             val (viewPopup, popupWindow) = popUpCreator(view, R.layout.account_email_popup, account_email_popup)
 
-            viewPopup.account_email_popup_email.addTextChangedListener(object: TextWatcher {
+            viewPopup.account_email_popup_email.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(p0: Editable?) {
                     validateEmail()
                 }
@@ -192,8 +213,15 @@ class AccountsFragment: Fragment() {
             }
 
             viewPopup.account_email_popup_submit.setOnClickListener {
-                popupWindow.dismiss()
-                accounts_main_layout.alpha = 1.0F
+                val tempEmail = viewPopup.account_email_popup_email.text.toString()
+                userInfoRef.update("name", tempEmail).addOnCompleteListener {
+                    accounts_main_layout.alpha = 1.0F
+                    popupWindow.dismiss()
+                }.addOnSuccessListener {
+                    Toast.makeText(view.context, "Email updated!", Toast.LENGTH_SHORT).show()
+                }.addOnFailureListener {
+                    Log.e(TAG, "Error occurred while updating Email")
+                }
             }
         } catch (e: Exception) {
             Log.e(TAG, e.message)
@@ -205,7 +233,7 @@ class AccountsFragment: Fragment() {
         try {
             val (viewPopup, popupWindow) = popUpCreator(view, R.layout.account_name_popup, account_name_popup)
 
-            viewPopup.account_name_popup_name.addTextChangedListener(object: TextWatcher {
+            viewPopup.account_name_popup_name.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(p0: Editable?) {
                     validateName()
                 }
@@ -234,8 +262,15 @@ class AccountsFragment: Fragment() {
             }
 
             viewPopup.account_name_popup_submit.setOnClickListener {
-                popupWindow.dismiss()
-                accounts_main_layout.alpha = 1.0F
+                val tempName = viewPopup.account_name_popup_name.text.toString()
+                userInfoRef.update("name", tempName).addOnCompleteListener {
+                    accounts_main_layout.alpha = 1.0F
+                    popupWindow.dismiss()
+                }.addOnSuccessListener {
+                    Toast.makeText(view.context, "Name updated!", Toast.LENGTH_SHORT).show()
+                }.addOnFailureListener {
+                    Log.e(TAG, "Error occurred while updating Name")
+                }
             }
         } catch (e: Exception) {
             Log.e(TAG, e.message)
