@@ -219,10 +219,10 @@ class AccountsFragment : Fragment() {
 
             viewPopup.account_contact_popup_contact.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(p0: Editable?) {
-                    validatePhone()
+                    validateContact()
                 }
 
-                private fun validatePhone() {
+                private fun validateContact() {
                     val phone = viewPopup.account_contact_popup_contact.text.toString().trim()
                     if (phone.isEmpty() || !isValidPhone(phone)) {
                         viewPopup.account_contact_layout.error = "Phone is invalid"
