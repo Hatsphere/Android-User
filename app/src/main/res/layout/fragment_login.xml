@@ -61,7 +61,7 @@
             android:id="@+id/btn_login"
             android:textSize="16sp"
             android:textColor="#212121"
-            android:background="@drawable/login_btn"
+            android:background="@drawable/ripple_login_btn"
             android:foreground="?attr/selectableItemBackground"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
