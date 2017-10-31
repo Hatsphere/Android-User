@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Fragment
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -61,7 +62,7 @@ class AccountsFragment : Fragment() {
     private val firestore = FirebaseFirestore.getInstance()
     private val userLoc = "users/" + user!!.uid
     private val userInfoRef = firestore.document(userLoc)
-    private val storageRef = FirebaseStorage.getInstance().getReference()
+    private val storageRef = FirebaseStorage.getInstance().reference
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -159,8 +160,10 @@ class AccountsFragment : Fragment() {
             view.account_email_text.text = result["email"] as CharSequence
             contactNo!!.text = result["contact"].toString()
             address!!.text = result["address"] as CharSequence
-            val downloadUri = result["profileImage"]!!.toString()
-            Picasso.with(view.context).load(downloadUri).into(profileCircular)
+            if (result["profileImage"] != null) {
+                val downloadUri = result["profileImage"]!!.toString()
+                Picasso.with(view.context).load(downloadUri).into(profileCircular)
+            }
         }
     }
 

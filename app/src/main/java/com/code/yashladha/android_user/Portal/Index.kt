@@ -75,6 +75,8 @@ class Index : AppCompatActivity() {
         }
     }
 
+
+
     private fun bottomBarOptionSelected(id: Int) {
         val fragment: Fragment = when (id) {
             menu_home -> HomeFragment()

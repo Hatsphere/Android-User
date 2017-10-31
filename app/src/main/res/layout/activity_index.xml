@@ -47,6 +47,7 @@
                 android:layout_height="wrap_content">
 
                 <FrameLayout
+                    android:layout_marginBottom="?attr/actionBarSize"
                     android:layout_height="match_parent"
                     android:id="@+id/frame_content_main"
                     android:layout_width="match_parent"/>
