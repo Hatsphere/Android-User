@@ -3,4 +3,8 @@
     <color name="colorPrimary">#0091ea</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="home_bottom_color">#006E90</color>
+    <color name="account_bottom_color">#F18F01</color>
+    <color name="cart_bottom_color">#99C24D</color>
+    <color name="logs_bottom_color">#41BBD9</color>
 </resources>
