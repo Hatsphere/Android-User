@@ -112,6 +112,7 @@ class AccountsFragment : Fragment() {
             if (data != null) {
                 val result = data.data
                 val filePath = getPathFromURI(result)
+                profileCircular!!.setImageURI(data.data)
                 val fileUri = Uri.fromFile(File(filePath))
 
                 val profileImageRef = storageRef.child("/users/" + fileUri.lastPathSegment)
