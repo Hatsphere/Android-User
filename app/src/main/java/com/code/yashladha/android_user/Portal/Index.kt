@@ -1,5 +1,8 @@
 package com.code.yashladha.android_user.Portal
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ValueAnimator
 import android.app.Fragment
 import android.app.FragmentManager
 import android.app.FragmentTransaction
@@ -10,6 +13,7 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
+import android.view.ViewAnimationUtils
 import com.code.yashladha.android_user.Portal.Adapter.ListItemAdapter
 import com.code.yashladha.android_user.Portal.Fragments.AccountsFragment
 import com.code.yashladha.android_user.Portal.Fragments.CartFragment
@@ -71,9 +75,49 @@ class Index : AppCompatActivity() {
 
         bottom_nav_index.setOnNavigationItemSelectedListener { item ->
             bottomBarOptionSelected(item.itemId)
+            bottomBarReveal(bottom_nav_index, item.itemId)
             true
         }
     }
+
+    private fun bottomBarReveal(view: View?, id: Int?) {
+        if (view != null) {
+            val div = when(id) {
+                menu_home -> 1
+                menu_cart_home -> 2
+                menu_account_home -> 3
+                menu_logs -> 4
+                else -> 1
+            }
+
+            val cx = (view.left + view.right) * 0.20 * div
+            val cy = (view.top + view.bottom) / 2
+
+            val startRadius = 0.toFloat()
+            val endRadius = Math.max(view.width, view.height).toFloat()
+
+            val color = when(id) {
+                menu_home -> resources.getColor(R.color.home_bottom_color)
+                menu_cart_home -> resources.getColor(R.color.cart_bottom_color)
+                menu_account_home -> resources.getColor(R.color.account_bottom_color)
+                menu_logs -> resources.getColor(R.color.logs_bottom_color)
+                else -> resources.getColor(R.color.home_bottom_color)
+            }
+
+            val anim = ViewAnimationUtils.createCircularReveal(view, cx.toInt(), 0, startRadius, endRadius)
+
+            anim.addListener(object: AnimatorListenerAdapter() {
+                override fun onAnimationStart(animation: Animator?) {
+                    super.onAnimationStart(animation)
+                    view.setBackgroundColor(color)
+                }
+            })
+
+            anim.duration = 650
+            anim.start()
+        }
+    }
+
 
     private fun bottomBarOptionSelected(id: Int) {
         val fragment: Fragment = when (id) {
