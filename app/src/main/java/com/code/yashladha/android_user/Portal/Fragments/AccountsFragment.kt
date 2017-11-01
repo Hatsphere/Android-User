@@ -18,10 +18,9 @@ import android.text.TextWatcher
 import android.util.Log
 import android.util.Patterns
 import android.view.*
-import android.widget.ImageView
-import android.widget.PopupWindow
-import android.widget.TextView
-import android.widget.Toast
+import android.view.View.*
+import android.widget.*
+import android.widget.ProgressBar.VISIBLE
 import com.code.yashladha.android_user.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -52,6 +51,7 @@ class AccountsFragment : Fragment() {
     }
 
     private val PICK_PHOTO = 1
+    private var bar: ProgressBar? = null
     private var name: ImageView? = null
     private var email: ImageView? = null
     private var contactNo: TextView? = null
@@ -74,6 +74,8 @@ class AccountsFragment : Fragment() {
         address = view.account_tv_address
         imageSelect = view.imageSelectionFab
         profileCircular = view.circularProfileImage
+        bar = view.account_progress
+
 
         updateUI(view)
 
@@ -100,6 +102,7 @@ class AccountsFragment : Fragment() {
         return view
     }
 
+
     private fun selectImage(view: View?) {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "image/*"
@@ -115,25 +118,32 @@ class AccountsFragment : Fragment() {
                 val fileUri = Uri.fromFile(File(filePath))
 
                 val profileImageRef = storageRef.child("/users/" + fileUri.lastPathSegment)
+                bar!!.visibility = VISIBLE
+
                 profileImageRef.putFile(fileUri)
                         .addOnSuccessListener { taskSnapshot ->
                             val downloadUrl = taskSnapshot.downloadUrl
                             userInfoRef
                                     .update("profileImage", downloadUrl.toString())
                                     .addOnSuccessListener {
+                                        bar!!.visibility = INVISIBLE
                                         Log.i("profileImageRef", "Image uploaded successfully")
+
                                     }
                                     .addOnFailureListener {
+                                        bar!!.visibility = INVISIBLE
                                         Log.e("profileImageRef", "Error occurred")
+
                                     }
                         }
+
                         .addOnFailureListener {
+                            bar!!.visibility = INVISIBLE
                             Toast.makeText(activity.applicationContext,
                                     "Error while updating image",
                                     Toast.LENGTH_SHORT
                             ).show()
                         }
-
             }
         }
     }
@@ -165,6 +175,7 @@ class AccountsFragment : Fragment() {
                 Picasso.with(view.context).load(downloadUri).into(profileCircular)
             }
         }
+        bar!!.setVisibility(INVISIBLE)
     }
 
     private fun initiateAddressPopup(view: View) {
