@@ -1,7 +1,6 @@
 package com.code.yashladha.android_user.Models;
 
-public class WishList
-{
+public class WishList {
     private String uid;
     private long pid;
 
@@ -14,15 +13,8 @@ public class WishList
         return uid;
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
-
     public long getPid() {
         return pid;
     }
 
-    public void setPid(long pid) {
-        this.pid = pid;
-    }
 }

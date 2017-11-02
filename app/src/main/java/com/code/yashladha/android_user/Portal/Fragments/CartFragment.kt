@@ -47,10 +47,10 @@ class CartFragment: Fragment() {
 
     private fun setTempData(): ArrayList<Item> {
         val items = ArrayList<Item>()
-        items.add(Item(0, "25", "0", 0, 0))
-        items.add(Item(0, "25", "0", 0, 0))
-        items.add(Item(0, "25", "0", 0, 0))
-        items.add(Item(0, "25", "0", 0, 0))
+        items.add(Item(0, "25", "0", 0, 0, 0 ))
+        items.add(Item(0, "25", "0", 0, 0, 0 ))
+        items.add(Item(0, "25", "0", 0, 0, 0 ))
+        items.add(Item(0, "25", "0", 0, 0, 0 ))
         return items
     }
 }

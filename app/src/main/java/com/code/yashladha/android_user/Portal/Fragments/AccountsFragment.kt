@@ -63,10 +63,19 @@ class AccountsFragment : Fragment() {
     private val userLoc = "users/" + user!!.uid
     private val userInfoRef = firestore.document(userLoc)
     private val storageRef = FirebaseStorage.getInstance().reference
+    private var bar1: ProgressBar? = null
+    private var bar2: ProgressBar? = null
+    private var bar3: ProgressBar? = null
+    private var bar4: ProgressBar? = null
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater!!.inflate(R.layout.fragment_accounts, container, false)
+
+        val view1 = inflater!!.inflate(R.layout.account_name_popup, container, false)
+        val view2 = inflater!!.inflate(R.layout.account_contact_popup, container, false)
+        val view3 = inflater!!.inflate(R.layout.account_address_popup, container, false)
+        val view4 = inflater!!.inflate(R.layout.account_email_popup, container, false)
 
         name = view.account_iv_name
         email = view.account_iv_email
@@ -75,6 +84,10 @@ class AccountsFragment : Fragment() {
         imageSelect = view.imageSelectionFab
         profileCircular = view.circularProfileImage
         bar = view.account_progress
+        bar1 = view1.name_progress
+        bar2 = view2.contact_progress
+        bar3 = view3.address_progress
+        bar4 = view4.email_progress
 
 
         updateUI(view)
@@ -98,10 +111,8 @@ class AccountsFragment : Fragment() {
         imageSelect!!.setOnClickListener {
             selectImage(view)
         }
-
         return view
     }
-
 
     private fun selectImage(view: View?) {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
@@ -114,12 +125,12 @@ class AccountsFragment : Fragment() {
         if (requestCode == PICK_PHOTO && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 val result = data.data
+                bar!!.visibility = VISIBLE
                 val filePath = getPathFromURI(result)
                 profileCircular!!.setImageURI(data.data)
                 val fileUri = Uri.fromFile(File(filePath))
 
                 val profileImageRef = storageRef.child("/users/" + fileUri.lastPathSegment)
-                bar!!.visibility = VISIBLE
 
                 profileImageRef.putFile(fileUri)
                         .addOnSuccessListener { taskSnapshot ->
@@ -176,7 +187,6 @@ class AccountsFragment : Fragment() {
                 Picasso.with(view.context).load(downloadUri).into(profileCircular)
             }
         }
-        bar!!.setVisibility(INVISIBLE)
     }
 
     private fun initiateAddressPopup(view: View) {
@@ -207,10 +217,12 @@ class AccountsFragment : Fragment() {
             })
 
             viewPopup.account_address_popup_submit.setOnClickListener {
+                bar3!!.visibility = VISIBLE
                 val addressText: String = viewPopup.account_address_popup_address.text.toString()
                 userInfoRef.update("address", addressText).addOnCompleteListener {
                     accounts_main_layout.alpha = 1.0F
                     popupWindow.dismiss()
+                    bar3!!.visibility = INVISIBLE
                 }.addOnSuccessListener {
                     Toast.makeText(view.context, "Address updated!", Toast.LENGTH_SHORT).show()
                     address!!.text = addressText
@@ -259,10 +271,12 @@ class AccountsFragment : Fragment() {
             })
 
             viewPopup.account_contact_popup_submit.setOnClickListener {
+                bar2!!.visibility = VISIBLE
                 val contactnumber = viewPopup.account_contact_popup_contact.text.toString()
                 userInfoRef.update("contact", contactnumber.toLong()).addOnCompleteListener {
                     accounts_main_layout.alpha = 1.0F
                     popupWindow.dismiss()
+                    bar2!!.visibility = INVISIBLE
                 }.addOnSuccessListener {
                     Toast.makeText(view.context, "Contact updated!", Toast.LENGTH_SHORT).show()
                     contactNo!!.text = contactnumber
@@ -317,10 +331,12 @@ class AccountsFragment : Fragment() {
             }
 
             viewPopup.account_email_popup_submit.setOnClickListener {
+                bar4!!.visibility = VISIBLE
                 val tempEmail = viewPopup.account_email_popup_email.text.toString()
                 userInfoRef.update("email", tempEmail).addOnCompleteListener {
                     accounts_main_layout.alpha = 1.0F
                     popupWindow.dismiss()
+                    bar4!!.visibility = INVISIBLE
                 }.addOnSuccessListener {
                     Toast.makeText(view.context, "Email updated!", Toast.LENGTH_SHORT).show()
                     view.account_email_text.text = tempEmail
@@ -367,11 +383,14 @@ class AccountsFragment : Fragment() {
             }
 
             viewPopup.account_name_popup_submit.setOnClickListener {
+                bar1!!.visibility = VISIBLE
                 val tempName = viewPopup.account_name_popup_name.text.toString()
                 userInfoRef.update("name", tempName).addOnCompleteListener {
                     accounts_main_layout.alpha = 1.0F
                     popupWindow.dismiss()
+                    bar1!!.visibility = INVISIBLE
                 }.addOnSuccessListener {
+
                     Toast.makeText(view.context, "Name updated!", Toast.LENGTH_SHORT).show()
                     view.account_name_text.text = tempName
                 }.addOnFailureListener {
