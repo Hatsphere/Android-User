@@ -19,39 +19,20 @@ public class Order {
         return order_id;
     }
 
-    public void setOrder_id(long order_id) {
-        this.order_id = order_id;
-    }
-
     public String getStatus() {
         return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public long getPay_id() {
         return pay_id;
     }
 
-    public void setPay_id(long pay_id) {
-        this.pay_id = pay_id;
-    }
-
     public String getUid() {
         return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
     }
 
     public String getOrder_date() {
         return order_date;
     }
 
-    public void setOrder_date(String order_date) {
-        this.order_date = order_date;
-    }
 }

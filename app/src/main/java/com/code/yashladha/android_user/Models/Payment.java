@@ -19,39 +19,20 @@ public class Payment {
         return pay_id;
     }
 
-    public void setPay_id(long pay_id) {
-        this.pay_id = pay_id;
-    }
-
     public String getPay_mode() {
         return pay_mode;
-    }
-
-    public void setPay_mode(String pay_mode) {
-        this.pay_mode = pay_mode;
     }
 
     public int getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
-        this.amount = amount;
-    }
-
     public String getDate() {
         return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
     }
 
     public String getUid() {
         return uid;
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
-}
+   }
