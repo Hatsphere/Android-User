@@ -24,8 +24,8 @@
         </activity>
         <activity
             android:name=".Portal.Index"
-            android:configChanges="orientation|screenSize"></activity>
-        <activity android:name=".Portal.Fragments.ItemDetail"></activity>
+            android:configChanges="orientation|screenSize"/>
+        <activity android:name=".Portal.Fragments.ItemDetail"/>
     </application>
 
 </manifest>
