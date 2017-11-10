@@ -7,6 +7,7 @@ import android.app.Fragment
 import android.app.FragmentManager
 import android.app.FragmentTransaction
 import android.content.res.Configuration
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.support.v7.app.ActionBarDrawerToggle
@@ -96,11 +97,24 @@ class Index : AppCompatActivity() {
             val startRadius = 0.toFloat()
             val endRadius = Math.max(view.width, view.height).toFloat()
 
-            val color = when(id) {
-                menu_home -> resources.getColor(R.color.home_bottom_color)
-                menu_cart_home -> resources.getColor(R.color.cart_bottom_color)
-                menu_account_home -> resources.getColor(R.color.account_bottom_color)
-                menu_logs -> resources.getColor(R.color.logs_bottom_color)
+            var color = resources.getColor(R.color.home_bottom_color)
+            when(id) {
+                menu_home -> {
+                    color = resources.getColor(R.color.home_bottom_color)
+                    supportActionBar!!.setBackgroundDrawable(ColorDrawable(getResources().getColor(R.color.home_bottom_color)))
+                }
+                menu_cart_home -> {
+                    color =  resources.getColor(R.color.cart_bottom_color)
+                    supportActionBar!!.setBackgroundDrawable(ColorDrawable(getResources().getColor(R.color.cart_bottom_color)))
+                }
+                menu_account_home -> {
+                    color = resources.getColor(R.color.account_bottom_color)
+                    supportActionBar!!.setBackgroundDrawable(ColorDrawable(getResources().getColor(R.color.account_bottom_color)))
+                }
+                menu_logs -> {
+                    color = resources.getColor(R.color.logs_bottom_color)
+                    supportActionBar!!.setBackgroundDrawable(ColorDrawable(getResources().getColor(R.color.logs_bottom_color)))
+                }
                 else -> resources.getColor(R.color.home_bottom_color)
             }
 

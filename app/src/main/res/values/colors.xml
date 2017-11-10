@@ -4,9 +4,13 @@
     <color name="black">#000000</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="home_bottom_color">#006E90</color>
-    <color name="account_bottom_color">#F18F01</color>
-    <color name="cart_bottom_color">#99C24D</color>
-    <color name="logs_bottom_color">#41BBD9</color>
-    <color name="dark_green">#00695C</color>
+    <color name="home_bottom_color">#DD2C00</color>
+    <color name="account_bottom_color">#6A1B9A</color>
+    <color name="cart_bottom_color">#00838F</color>
+    <color name="logs_bottom_color">#AD1457</color>
+    <color name="light">#CFD8DC</color>
+    <color name="red">#6A1B9A</color>
+    <color name="navyBlue">#00695C</color>
+    <color name="teal">#00838F</color>
+    <color name="purple">#AD1457</color>
 </resources>
