@@ -42,7 +42,6 @@ public class Product {
         return discount;
     }
 
-
     public boolean isOn_sale() {
         return on_sale;
     }

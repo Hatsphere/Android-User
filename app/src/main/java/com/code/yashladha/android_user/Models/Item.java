@@ -7,17 +7,14 @@ public class Item {
     private String uid;
     private long pid;
     private long order_id;
-    private long type_id;
     private int ratings;
 
-    public Item(long item_id, String order_date, String uid, long pid, long order_id, long type_id, int ratings) {
+    public Item(long item_id, String order_date, String uid, long pid, long order_id, int ratings) {
         this.item_id = item_id;
         this.order_date = order_date;
         this.uid = uid;
         this.pid = pid;
         this.order_id = order_id;
-        this.type_id = type_id;
-
         this.ratings = ratings;
     }
 
@@ -40,11 +37,6 @@ public class Item {
     public long getOrder_id() {
         return order_id;
     }
-
-    public long getType_id() {
-        return type_id;
-    }
-
 
     public int getRatings() {
         return ratings;

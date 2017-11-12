@@ -64,6 +64,13 @@ public class Login extends Fragment {
         }
     }
 
+    public String getUserId()
+    {
+        FirebaseUser user = mAuth.getCurrentUser();
+        String userId = user.getUid();
+        return userId;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
