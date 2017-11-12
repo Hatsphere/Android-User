@@ -88,7 +88,7 @@ class LogsFragment: Fragment() {
         return view
     }
 
-    private fun newIntent(Context: LogsFragment, order_date :String, order_id:String ): Intent {
+    private fun newIntent(Context: LogsFragment, order_id :String, order_date:String ): Intent {
         val intent = Intent(Context, LogsActivity::class.java)
         intent.putExtra(ORDER_ID, order_id)
         intent.putExtra(ORDER_DATE, order_date)
