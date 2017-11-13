@@ -4,7 +4,6 @@ import android.app.Activity
 import android.app.Fragment
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -18,7 +17,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.util.Patterns
 import android.view.*
-import android.view.View.*
+import android.view.View.INVISIBLE
 import android.widget.*
 import android.widget.ProgressBar.VISIBLE
 import com.code.yashladha.android_user.R
@@ -72,10 +71,10 @@ class AccountsFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater!!.inflate(R.layout.fragment_accounts, container, false)
 
-        val view1 = inflater!!.inflate(R.layout.account_name_popup, container, false)
-        val view2 = inflater!!.inflate(R.layout.account_contact_popup, container, false)
-        val view3 = inflater!!.inflate(R.layout.account_address_popup, container, false)
-        val view4 = inflater!!.inflate(R.layout.account_email_popup, container, false)
+        val view1 = inflater.inflate(R.layout.account_name_popup, container, false)
+        val view2 = inflater.inflate(R.layout.account_contact_popup, container, false)
+        val view3 = inflater.inflate(R.layout.account_address_popup, container, false)
+        val view4 = inflater.inflate(R.layout.account_email_popup, container, false)
 
         name = view.account_iv_name
         email = view.account_iv_email

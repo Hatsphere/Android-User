@@ -78,6 +78,9 @@ class Index : AppCompatActivity() {
             bottomBarReveal(bottom_nav_index, item.itemId)
             true
         }
+
+        bottomBarOptionSelected(menu_home)
+        bottom_nav_index.setBackgroundColor(resources.getColor(R.color.home_bottom_color))
     }
 
     private fun bottomBarReveal(view: View?, id: Int?) {
@@ -138,6 +141,7 @@ class Index : AppCompatActivity() {
             else -> HomeFragment.TAG
         }
 
+        mTitle = title
         supportActionBar!!.title = title
 
         // Fragment transaction

@@ -1,0 +1,16 @@
+package com.code.yashladha.android_user.Portal.Helper;
+
+import android.content.Context;
+
+import com.code.yashladha.android_user.Models.Product;
+
+import java.util.ArrayList;
+
+/**
+ * Created by yashladha on 12/11/17.
+ * Interface for the callback of product Showing
+ */
+
+public interface ProductCallback {
+    void updateProductUI (ArrayList<Product> products, Context context);
+}
