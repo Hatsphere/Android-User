@@ -118,7 +118,7 @@ class Index : AppCompatActivity() {
                 }
             })
 
-            anim2.addListener(object: AnimatorListenerAdapter() {
+            anim2.addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationStart(animation: Animator?) {
                     super.onAnimationStart(animation)
                     appBarLayout.setBackgroundColor(color)
