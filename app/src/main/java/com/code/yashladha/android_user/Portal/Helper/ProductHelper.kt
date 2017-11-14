@@ -1,6 +1,7 @@
 package com.code.yashladha.android_user.Portal.Helper
 
 import android.content.Context
+import android.util.Log
 import com.code.yashladha.android_user.Models.Product
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -28,6 +29,7 @@ class ProductHelper {
 
                                 it.get().addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
+                                        val uidId = it.parent.parent.id
                                         for (item in task.result) {
                                             val data = item.data
                                             val sale = data.get("Sale") as Boolean
@@ -41,10 +43,9 @@ class ProductHelper {
                                             val rightImage = images.get("rightImage") as String
 
                                             if (sellerProducts.size < 16) {
-                                                sellerProducts.add(Product(item.id, sale, description, price.toInt(), availability, productClass, primaryImage, leftImage, rightImage))
+                                                sellerProducts.add(Product(it.parent.parent.id, item.id, sale, description, price.toInt(), availability, productClass, primaryImage, leftImage, rightImage))
                                             }
                                         }
-
                                         callback.updateProductUI(sellerProducts, context)
                                     }
                                 }

@@ -16,6 +16,7 @@ import java.io.Serializable;
  */
 
 public class Product implements Serializable {
+    private String sellerId;
     private String Name;
     private boolean Sale;
     private String Description;
@@ -29,7 +30,8 @@ public class Product implements Serializable {
     public Product() {
     }
 
-    public Product(String aProduct, boolean sale, String description, int price, boolean availability, String aClass, String primaryImage, String leftImage, String rightImage) {
+    public Product(String sellerId, String aProduct, boolean sale, String description, int price, boolean availability, String aClass, String primaryImage, String leftImage, String rightImage) {
+        this.sellerId = sellerId;
         this.Name = aProduct;
         Sale = sale;
         Description = description;
@@ -39,6 +41,14 @@ public class Product implements Serializable {
         this.primaryImage = primaryImage;
         this.leftImage = leftImage;
         this.rightImage = rightImage;
+    }
+
+    public String getSellerId() {
+        return sellerId;
+    }
+
+    public void setSellerId(String sellerId) {
+        this.sellerId = sellerId;
     }
 
     public String getName() {

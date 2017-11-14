@@ -29,7 +29,7 @@ import org.jetbrains.anko.info
 class HomeFragment : Fragment(), AnkoLogger {
 
     private var horizontalLm: LinearLayoutManager? = null
-    private lateinit var interestedLayoutManag : LinearLayoutManager
+    private lateinit var interestedLayoutManag: LinearLayoutManager
     private lateinit var interestedThingsRv: RecyclerView
     private lateinit var interestedThingsAdap: HomeIndexAdapter
     private lateinit var trendingThingsAdap: HomeIndexAdapter
@@ -39,7 +39,7 @@ class HomeFragment : Fragment(), AnkoLogger {
     private lateinit var mContext: Context
     private lateinit var interestedProducts: ArrayList<Product>
     private lateinit var trendingProducts: ArrayList<Product>
-    private lateinit var trendingRv : RecyclerView
+    private lateinit var trendingRv: RecyclerView
 
     companion object {
         val TAG = "HomeFragment"
