@@ -43,7 +43,19 @@ class ProductHelper {
                                             val rightImage = images.get("rightImage") as String
 
                                             if (sellerProducts.size < 16) {
-                                                sellerProducts.add(Product(it.parent.parent.id, item.id, sale, description, price.toInt(), availability, productClass, primaryImage, leftImage, rightImage))
+                                                val item_ = Product(
+                                                        uidId,
+                                                        item.id,
+                                                        sale,
+                                                        description,
+                                                        price.toInt(),
+                                                        availability,
+                                                        productClass,
+                                                        primaryImage,
+                                                        leftImage,
+                                                        rightImage
+                                                )
+                                                sellerProducts.add(item_)
                                             }
                                         }
                                         callback.updateProductUI(sellerProducts, context)

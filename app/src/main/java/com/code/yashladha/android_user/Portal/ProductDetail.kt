@@ -1,17 +1,22 @@
 package com.code.yashladha.android_user.Portal
 
+import android.app.ProgressDialog
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
 import com.code.yashladha.android_user.Models.Product
 import com.code.yashladha.android_user.Models.Seller
 import com.code.yashladha.android_user.R
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 import com.synnapps.carouselview.ImageListener
 import kotlinx.android.synthetic.main.activity_product_detail.*
 import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
+import org.jetbrains.anko.debug
+import org.jetbrains.anko.toast
 
 class ProductDetail : AppCompatActivity(), AnkoLogger {
 
@@ -20,13 +25,14 @@ class ProductDetail : AppCompatActivity(), AnkoLogger {
     private lateinit var firestore: FirebaseFirestore
     private lateinit var sellerId: String
     private lateinit var sellerInfo : Seller
+    private lateinit var userId : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product_detail)
 
         firestore = FirebaseFirestore.getInstance()
-
+        userId = FirebaseAuth.getInstance().currentUser!!.uid
         imageUrls = ArrayList()
         item = intent.getSerializableExtra("Product") as Product
 
@@ -68,6 +74,36 @@ class ProductDetail : AppCompatActivity(), AnkoLogger {
                     }
                 }
 
+        detail_fab_checkout.setOnClickListener {
+            debug("Item added to cart")
+            AddToCart()
+        }
+
+        detail_fab_wishlist.setOnClickListener {
+            detail_fab_wishlist.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.like_heart))
+        }
+
         detail_description.text = item.description
+    }
+
+    private fun AddToCart() {
+
+        detail_progress_bar.visibility = View.VISIBLE
+        detail_main_layout.alpha = 0.2f
+
+        firestore.collection(userId + "/cart/" + item.name + "_" + item.sellerId).document("Info")
+                .set(item)
+                .addOnCompleteListener { task ->
+                    detail_main_layout.alpha = 1.0f
+                    detail_progress_bar.visibility = View.INVISIBLE
+                    if (task.isSuccessful) {
+                        detail_fab_checkout.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.added_to_cart))
+                        toast("Product added to cart")
+                    } else {
+                        toast("Unable to add to cart")
+                        error("Unable to add item to cart")
+                    }
+                }
+
     }
 }
