@@ -2,7 +2,6 @@ package com.code.yashladha.android_user.Portal
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.animation.ValueAnimator
 import android.app.Fragment
 import android.app.FragmentManager
 import android.app.FragmentTransaction
@@ -29,8 +28,8 @@ class Index : AppCompatActivity() {
     private val TAG = javaClass.simpleName
 
     var mDrawerToggle: ActionBarDrawerToggle? = null
-    var mTitle : CharSequence? = null
-    var mDrawerTitle : CharSequence? = null
+    var mTitle: CharSequence? = null
+    var mDrawerTitle: CharSequence? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,11 +80,12 @@ class Index : AppCompatActivity() {
 
         bottomBarOptionSelected(menu_home)
         bottom_nav_index.setBackgroundColor(resources.getColor(R.color.home_bottom_color))
+        appBarLayout.setBackgroundColor(resources.getColor(R.color.home_bottom_color))
     }
 
     private fun bottomBarReveal(view: View?, id: Int?) {
         if (view != null) {
-            val div = when(id) {
+            val div = when (id) {
                 menu_home -> 1
                 menu_cart_home -> 2
                 menu_account_home -> 3
@@ -94,12 +94,13 @@ class Index : AppCompatActivity() {
             }
 
             val cx = (view.left + view.right) * 0.20 * div
-            val cy = (view.top + view.bottom) / 2
+            val cx2 = (appBarLayout.left + appBarLayout.right) / 2.0
 
             val startRadius = 0.toFloat()
             val endRadius = Math.max(view.width, view.height).toFloat()
+            val endRadius2 = Math.max(appBarLayout.width, appBarLayout.height).toFloat()
 
-            val color = when(id) {
+            val color = when (id) {
                 menu_home -> resources.getColor(R.color.home_bottom_color)
                 menu_cart_home -> resources.getColor(R.color.cart_bottom_color)
                 menu_account_home -> resources.getColor(R.color.account_bottom_color)
@@ -108,16 +109,27 @@ class Index : AppCompatActivity() {
             }
 
             val anim = ViewAnimationUtils.createCircularReveal(view, cx.toInt(), 0, startRadius, endRadius)
+            val anim2 = ViewAnimationUtils.createCircularReveal(appBarLayout, cx2.toInt(), 0, startRadius, endRadius2)
 
-            anim.addListener(object: AnimatorListenerAdapter() {
+            anim.addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationStart(animation: Animator?) {
                     super.onAnimationStart(animation)
                     view.setBackgroundColor(color)
                 }
             })
 
+            anim2.addListener(object: AnimatorListenerAdapter() {
+                override fun onAnimationStart(animation: Animator?) {
+                    super.onAnimationStart(animation)
+                    appBarLayout.setBackgroundColor(color)
+                }
+            })
+
             anim.duration = 650
             anim.start()
+
+            anim2.duration = 650
+            anim2.start()
         }
     }
 
