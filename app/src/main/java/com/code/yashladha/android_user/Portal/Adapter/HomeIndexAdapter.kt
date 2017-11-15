@@ -34,6 +34,7 @@ class HomeIndexAdapter(private val items: ArrayList<Product>, val context: Conte
             Picasso
                     .with(context)
                     .load(item.primaryImage)
+                    .fit()
                     .into(itemView.item_product_image)
             itemView.item_product_name.text = item.name
             if (!item.isAvailability) {

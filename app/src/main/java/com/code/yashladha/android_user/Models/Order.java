@@ -7,6 +7,9 @@ public class Order {
     private String uid;
     private String order_date;
 
+    public Order() {
+    }
+
     public Order(long order_id, String status, long pay_id, String uid, String order_date) {
         this.order_id = order_id;
         this.status = status;
@@ -35,4 +38,23 @@ public class Order {
         return order_date;
     }
 
+    public void setOrder_id(long order_id) {
+        this.order_id = order_id;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setPay_id(long pay_id) {
+        this.pay_id = pay_id;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public void setOrder_date(String order_date) {
+        this.order_date = order_date;
+    }
 }

@@ -1,11 +1,9 @@
 package com.code.yashladha.android_user.Portal
 
-import android.app.ProgressDialog
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
-import android.widget.ProgressBar
 import com.code.yashladha.android_user.Models.Product
 import com.code.yashladha.android_user.Models.Seller
 import com.code.yashladha.android_user.R
@@ -46,6 +44,7 @@ class ProductDetail : AppCompatActivity(), AnkoLogger {
             if (imageUrls.get(position) != "") {
                 Picasso.with(baseContext)
                         .load(imageUrls.get(position))
+                        .fit()
                         .into(imageView)
             } else {
                 Picasso.with(baseContext)
@@ -68,6 +67,7 @@ class ProductDetail : AppCompatActivity(), AnkoLogger {
                         sellerInfo = task.result.toObject(Seller::class.java)
                         Picasso.with(baseContext)
                                 .load(sellerInfo.profileImage)
+                                .fit()
                                 .into(detail_seller_image)
 
                         detail_seller_name.text = sellerInfo.name
@@ -91,7 +91,7 @@ class ProductDetail : AppCompatActivity(), AnkoLogger {
         detail_progress_bar.visibility = View.VISIBLE
         detail_main_layout.alpha = 0.2f
 
-        firestore.collection(userId + "/cart/" + item.name + "_" + item.sellerId).document("Info")
+        firestore.document(userId + "/cart/Info/" + item.name + "_" + item.sellerId)
                 .set(item)
                 .addOnCompleteListener { task ->
                     detail_main_layout.alpha = 1.0f

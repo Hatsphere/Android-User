@@ -7,7 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.code.yashladha.android_user.Models.Item
+import com.code.yashladha.android_user.Models.Product
 import com.code.yashladha.android_user.R
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.cart_item.view.*
 
 /**
@@ -15,7 +17,7 @@ import kotlinx.android.synthetic.main.cart_item.view.*
  * Adapter for inflating the cart list item
  */
 
-class CartItemListAdapter(val items: ArrayList<Item>, val context: Context) : RecyclerView.Adapter<CartItemListAdapter.ViewHolder>() {
+class CartItemListAdapter(val items: ArrayList<Product>, val context: Context) : RecyclerView.Adapter<CartItemListAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) = holder!!.bind(items[position])
 
@@ -27,8 +29,14 @@ class CartItemListAdapter(val items: ArrayList<Item>, val context: Context) : Re
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(item: Item) = with(itemView) {
-            itemView.tv_cart_item_name.text = "Sample Item"
+        fun bind(item: Product) = with(itemView) {
+            itemView.tv_cart_item_name.text = item.name
+            Picasso.with(context)
+                    .load(item.primaryImage)
+                    .fit()
+                    .into(itemView.cart_item_product_image)
+            val priceValue = "Rs. " + item.price.toString()
+            itemView.cart_item_price.text = priceValue
         }
     }
 
