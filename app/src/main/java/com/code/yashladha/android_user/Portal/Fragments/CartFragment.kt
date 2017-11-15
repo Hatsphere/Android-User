@@ -10,13 +10,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.code.yashladha.android_user.Models.Item
 import com.code.yashladha.android_user.Models.Order
 import com.code.yashladha.android_user.Models.Product
 import com.code.yashladha.android_user.Portal.Adapter.CartItemListAdapter
 import com.code.yashladha.android_user.R
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_cart.view.*
 import org.jetbrains.anko.AnkoLogger
@@ -25,24 +23,25 @@ import org.jetbrains.anko.info
 import org.jetbrains.anko.toast
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 /**
  * Created by yashladha on 17/10/17.
  * Cart fragment for the android user
  */
 
-class CartFragment: Fragment(), AnkoLogger {
+class CartFragment : Fragment(), AnkoLogger {
 
     companion object {
         val TAG = "CartFragment"
     }
 
-    private var itemList : RecyclerView? = null
-    private var totalCost : TextView? = null
-    private lateinit var list : ArrayList<Product>
-    private lateinit var firestore : FirebaseFirestore
-    private lateinit var userId : String
-    private lateinit var adapter : CartItemListAdapter
+    private var itemList: RecyclerView? = null
+    private var totalCost: TextView? = null
+    private lateinit var list: ArrayList<Product>
+    private lateinit var firestore: FirebaseFirestore
+    private lateinit var userId: String
+    private lateinit var adapter: CartItemListAdapter
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -56,6 +55,23 @@ class CartFragment: Fragment(), AnkoLogger {
 
         info(userId)
 
+        InflateCartList()
+
+        val lm = LinearLayoutManager(view.context)
+        itemList!!.layoutManager = lm
+        itemList!!.setHasFixedSize(true)
+
+        adapter = CartItemListAdapter(list, view.context)
+        itemList!!.adapter = adapter
+
+        view.cart_checkout_btn.setOnClickListener {
+            checkout()
+        }
+
+        return view
+    }
+
+    private fun InflateCartList() {
         firestore.collection(userId + "/cart/Info")
                 .get()
                 .addOnCompleteListener { task ->
@@ -72,30 +88,22 @@ class CartFragment: Fragment(), AnkoLogger {
                 .addOnFailureListener { exception ->
                     exception.stackTrace
                 }
-
-        val lm = LinearLayoutManager(view.context)
-        itemList!!.layoutManager = lm
-        itemList!!.setHasFixedSize(true)
-
-        adapter = CartItemListAdapter(list, view.context)
-        itemList!!.adapter = adapter
-
-        return view
     }
 
     private fun checkout() {
-        firestore.collection(userId + "/purchase")
-                .document(getTimeStamp())
 
         val writeBatch = firestore.batch()
         for (item in list) {
-            val orderRef = firestore.collection(item.sellerId + "/orders/" + item.name).document(userId)
             val orderObject = Order()
 
             orderObject.uid = userId
             orderObject.order_date = getTimeStamp()
-            orderObject.status = "Accepted"
+            orderObject.status = "Waiting"
 
+            val orderRef = firestore.collection(item.sellerId + "/orders/waiting").document()
+            val userOrderRef = firestore.collection(userId + "/orders/waiting").document(orderRef.id)
+            orderObject.order_id = orderRef.id
+            writeBatch.set(userOrderRef, orderObject)
             writeBatch.set(orderRef, orderObject)
         }
 
@@ -103,7 +111,7 @@ class CartFragment: Fragment(), AnkoLogger {
             if (task.isSuccessful) {
                 debug("Batch write success, cart ordered")
                 toast("Order placed")
-                list = ArrayList()
+                list.clear()
                 adapter.notifyDataSetChanged()
             } else {
                 toast("Error while ordering")
@@ -112,8 +120,8 @@ class CartFragment: Fragment(), AnkoLogger {
         }
     }
 
-    private fun getTimeStamp() : String {
-        var timstamp = ""
+    private fun getTimeStamp(): String {
+        var timestamp = ""
         val simpleDateFormat = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             SimpleDateFormat("dd-MM-yyyy-hh-mm-ss")
         } else {
@@ -122,15 +130,10 @@ class CartFragment: Fragment(), AnkoLogger {
 
         if (simpleDateFormat != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                timstamp = simpleDateFormat.format(Date())
+                timestamp = simpleDateFormat.format(Date())
             }
         }
-        return timstamp
+        return timestamp
     }
 
-    private fun setTempData(): ArrayList<Item> {
-        val items = ArrayList<Item>()
-        items.add(Item(0, "25", "0", 0, 0, 0 ))
-        return items
-    }
 }

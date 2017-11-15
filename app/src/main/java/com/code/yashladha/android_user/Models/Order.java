@@ -1,7 +1,7 @@
 package com.code.yashladha.android_user.Models;
 
 public class Order {
-    private long order_id;
+    private String order_id;
     private String status;
     private long pay_id;
     private String uid;
@@ -10,7 +10,7 @@ public class Order {
     public Order() {
     }
 
-    public Order(long order_id, String status, long pay_id, String uid, String order_date) {
+    public Order(String order_id, String status, long pay_id, String uid, String order_date) {
         this.order_id = order_id;
         this.status = status;
         this.pay_id = pay_id;
@@ -18,9 +18,6 @@ public class Order {
         this.order_date = order_date;
     }
 
-    public long getOrder_id() {
-        return order_id;
-    }
 
     public String getStatus() {
         return status;
@@ -38,7 +35,11 @@ public class Order {
         return order_date;
     }
 
-    public void setOrder_id(long order_id) {
+    public String getOrder_id() {
+        return order_id;
+    }
+
+    public void setOrder_id(String order_id) {
         this.order_id = order_id;
     }
 
