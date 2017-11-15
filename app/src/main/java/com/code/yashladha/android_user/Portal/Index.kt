@@ -21,15 +21,20 @@ import com.code.yashladha.android_user.Portal.Fragments.LogsFragment
 import com.code.yashladha.android_user.Portal.Model.ListItem
 import com.code.yashladha.android_user.R
 import com.code.yashladha.android_user.R.id.*
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_index.*
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 
-class Index : AppCompatActivity() {
+class Index : AppCompatActivity(), AnkoLogger {
 
     private val TAG = javaClass.simpleName
 
     var mDrawerToggle: ActionBarDrawerToggle? = null
     var mTitle: CharSequence? = null
     var mDrawerTitle: CharSequence? = null
+    private lateinit var firestore: FirebaseFirestore
+    private lateinit var cateogries: ArrayList<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,14 +42,17 @@ class Index : AppCompatActivity() {
 
         setSupportActionBar(main_toolbar)
 
+        firestore = FirebaseFirestore.getInstance()
+        cateogries = ArrayList()
+
         mTitle = title
         mDrawerTitle = title
 
         val listEntries: ArrayList<ListItem> = ArrayList()
-        listEntries.add(ListItem(R.drawable.ic_home_black_24dp, "Home"))
-        listEntries.add(ListItem(R.mipmap.ic_launcher, "About"))
-
         val listAdapter = ListItemAdapter(listEntries, baseContext)
+
+        InflatesCateogryList(listEntries, listAdapter)
+
 
         left_drawer.adapter = listAdapter
 
@@ -81,6 +89,40 @@ class Index : AppCompatActivity() {
         bottomBarOptionSelected(menu_home)
         bottom_nav_index.setBackgroundColor(resources.getColor(R.color.home_bottom_color))
         appBarLayout.setBackgroundColor(resources.getColor(R.color.home_bottom_color))
+    }
+
+    /**
+     * Inflates the cateogry list in the List View of Navigation Drawer
+     * of Index layout
+     * @param listEntries : List of the item in the list
+     * @param listAdapter : Adapter for the list view
+     */
+    private fun InflatesCateogryList(listEntries: ArrayList<ListItem>, listAdapter: ListItemAdapter) {
+        firestore.collection("Cateogries")
+                .document("Details")
+                .get()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        info("Cateogries Fetched successfully")
+                        val res = task.result
+                        var obj = res.data
+                        obj = obj.toSortedMap()
+
+                        for (cat in obj) {
+                            val item = cat.value as String
+                            val image = when (item) {
+                                "Home Decor" -> R.drawable.home_decor
+                                "Personal Accessories" -> R.drawable.personal_accessories
+                                "Gifts" -> R.drawable.gifts
+                                "Paintings/Wall Hangings" -> R.drawable.painting
+                                else -> R.drawable.other
+                            }
+
+                            listEntries.add(ListItem(image, item))
+                        }
+                        listAdapter.notifyDataSetChanged()
+                    }
+                }
     }
 
     private fun bottomBarReveal(view: View?, id: Int?) {
@@ -156,7 +198,6 @@ class Index : AppCompatActivity() {
         mTitle = title
         supportActionBar!!.title = title
 
-        // Fragment transaction
         fragmentManager.inTransaction {
             replace(R.id.frame_content_main, fragment, title)
         }

@@ -76,9 +76,9 @@
     </android.support.design.widget.CoordinatorLayout>
 
     <LinearLayout
+        android:layout_gravity="start"
         android:layout_width="280dp"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
         android:orientation="vertical"
         android:weightSum="4">
 
@@ -152,8 +152,7 @@
             android:layout_weight="1"
             android:background="#efebe9"
             android:choiceMode="singleChoice"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="3dp" />
+            android:divider="@android:color/transparent" />
 
     </LinearLayout>
 
