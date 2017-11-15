@@ -183,7 +183,7 @@ class AccountsFragment : Fragment() {
             address!!.text = result["address"] as CharSequence
             if (result["profileImage"] != null) {
                 val downloadUri = result["profileImage"]!!.toString()
-                Picasso.with(view.context).load(downloadUri).into(profileCircular)
+                Picasso.with(view.context).load(downloadUri).fit().into(profileCircular)
             }
         }
     }
