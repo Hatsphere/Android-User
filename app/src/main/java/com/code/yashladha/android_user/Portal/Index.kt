@@ -2,7 +2,6 @@ package com.code.yashladha.android_user.Portal
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.animation.ValueAnimator
 import android.app.Fragment
 import android.app.FragmentManager
 import android.app.FragmentTransaction
@@ -23,15 +22,20 @@ import com.code.yashladha.android_user.Portal.Fragments.LogsFragment
 import com.code.yashladha.android_user.Portal.Model.ListItem
 import com.code.yashladha.android_user.R
 import com.code.yashladha.android_user.R.id.*
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_index.*
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 
-class Index : AppCompatActivity() {
+class Index : AppCompatActivity(), AnkoLogger {
 
     private val TAG = javaClass.simpleName
 
     var mDrawerToggle: ActionBarDrawerToggle? = null
-    var mTitle : CharSequence? = null
-    var mDrawerTitle : CharSequence? = null
+    var mTitle: CharSequence? = null
+    var mDrawerTitle: CharSequence? = null
+    private lateinit var firestore: FirebaseFirestore
+    private lateinit var cateogries: ArrayList<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,14 +43,17 @@ class Index : AppCompatActivity() {
 
         setSupportActionBar(main_toolbar)
 
+        firestore = FirebaseFirestore.getInstance()
+        cateogries = ArrayList()
+
         mTitle = title
         mDrawerTitle = title
 
         val listEntries: ArrayList<ListItem> = ArrayList()
-        listEntries.add(ListItem(R.drawable.ic_home_black_24dp, "Home"))
-        listEntries.add(ListItem(R.mipmap.ic_launcher, "About"))
-
         val listAdapter = ListItemAdapter(listEntries, baseContext)
+
+        InflatesCateogryList(listEntries, listAdapter)
+
 
         left_drawer.adapter = listAdapter
 
@@ -79,11 +86,49 @@ class Index : AppCompatActivity() {
             bottomBarReveal(bottom_nav_index, item.itemId)
             true
         }
+
+        bottomBarOptionSelected(menu_home)
+        bottom_nav_index.setBackgroundColor(resources.getColor(R.color.home_bottom_color))
+        appBarLayout.setBackgroundColor(resources.getColor(R.color.home_bottom_color))
+    }
+
+    /**
+     * Inflates the cateogry list in the List View of Navigation Drawer
+     * of Index layout
+     * @param listEntries : List of the item in the list
+     * @param listAdapter : Adapter for the list view
+     */
+    private fun InflatesCateogryList(listEntries: ArrayList<ListItem>, listAdapter: ListItemAdapter) {
+        firestore.collection("Cateogries")
+                .document("Details")
+                .get()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        info("Cateogries Fetched successfully")
+                        val res = task.result
+                        var obj = res.data
+                        obj = obj.toSortedMap()
+
+                        for (cat in obj) {
+                            val item = cat.value as String
+                            val image = when (item) {
+                                "Home Decor" -> R.drawable.home_decor
+                                "Personal Accessories" -> R.drawable.personal_accessories
+                                "Gifts" -> R.drawable.gifts
+                                "Paintings/Wall Hangings" -> R.drawable.painting
+                                else -> R.drawable.other
+                            }
+
+                            listEntries.add(ListItem(image, item))
+                        }
+                        listAdapter.notifyDataSetChanged()
+                    }
+                }
     }
 
     private fun bottomBarReveal(view: View?, id: Int?) {
         if (view != null) {
-            val div = when(id) {
+            val div = when (id) {
                 menu_home -> 1
                 menu_cart_home -> 2
                 menu_account_home -> 3
@@ -92,43 +137,42 @@ class Index : AppCompatActivity() {
             }
 
             val cx = (view.left + view.right) * 0.20 * div
-            val cy = (view.top + view.bottom) / 2
+            val cx2 = (appBarLayout.left + appBarLayout.right) / 2.0
 
             val startRadius = 0.toFloat()
             val endRadius = Math.max(view.width, view.height).toFloat()
+            val endRadius2 = Math.max(appBarLayout.width, appBarLayout.height).toFloat()
 
-            var color = resources.getColor(R.color.home_bottom_color)
-            when(id) {
-                menu_home -> {
-                    color = resources.getColor(R.color.home_bottom_color)
-                    supportActionBar!!.setBackgroundDrawable(ColorDrawable(getResources().getColor(R.color.home_bottom_color)))
-                }
-                menu_cart_home -> {
-                    color =  resources.getColor(R.color.cart_bottom_color)
-                    supportActionBar!!.setBackgroundDrawable(ColorDrawable(getResources().getColor(R.color.cart_bottom_color)))
-                }
-                menu_account_home -> {
-                    color = resources.getColor(R.color.account_bottom_color)
-                    supportActionBar!!.setBackgroundDrawable(ColorDrawable(getResources().getColor(R.color.account_bottom_color)))
-                }
-                menu_logs -> {
-                    color = resources.getColor(R.color.logs_bottom_color)
-                    supportActionBar!!.setBackgroundDrawable(ColorDrawable(getResources().getColor(R.color.logs_bottom_color)))
-                }
+            val color = when (id) {
+                menu_home -> resources.getColor(R.color.home_bottom_color)
+                menu_cart_home -> resources.getColor(R.color.cart_bottom_color)
+                menu_account_home -> resources.getColor(R.color.account_bottom_color)
+                menu_logs -> resources.getColor(R.color.logs_bottom_color)
                 else -> resources.getColor(R.color.home_bottom_color)
             }
 
             val anim = ViewAnimationUtils.createCircularReveal(view, cx.toInt(), 0, startRadius, endRadius)
+            val anim2 = ViewAnimationUtils.createCircularReveal(appBarLayout, cx2.toInt(), 0, startRadius, endRadius2)
 
-            anim.addListener(object: AnimatorListenerAdapter() {
+            anim.addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationStart(animation: Animator?) {
                     super.onAnimationStart(animation)
                     view.setBackgroundColor(color)
                 }
             })
 
+            anim2.addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationStart(animation: Animator?) {
+                    super.onAnimationStart(animation)
+                    appBarLayout.setBackgroundColor(color)
+                }
+            })
+
             anim.duration = 650
             anim.start()
+
+            anim2.duration = 650
+            anim2.start()
         }
     }
 
@@ -152,9 +196,9 @@ class Index : AppCompatActivity() {
             else -> HomeFragment.TAG
         }
 
+        mTitle = title
         supportActionBar!!.title = title
 
-        // Fragment transaction
         fragmentManager.inTransaction {
             replace(R.id.frame_content_main, fragment, title)
         }

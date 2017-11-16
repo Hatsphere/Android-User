@@ -13,4 +13,8 @@
     <color name="navyBlue">#00695C</color>
     <color name="teal">#00838F</color>
     <color name="purple">#AD1457</color>
+    <color name="dark_green">#00695C</color>
+    <color name="not_available">#d50000</color>
+    <color name="added_to_cart">#ffe100</color>
+    <color name="like_heart">#d50000</color>
 </resources>

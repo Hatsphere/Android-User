@@ -1,61 +1,125 @@
 package com.code.yashladha.android_user.Models;
 
+import java.io.Serializable;
+
 /**
- * Created by User on 11/10/2017.
+ * Created by yashladha on 12/11/17.
+ * Name : Name of product
+ * Sale: Flag for sale
+ * Description : Description of the product
+ * Price : Price of the product
+ * Availability : Flag for availability of product
+ * ProductClass : Class of Product
+ * primaryImage : Primary Image to be shown (url)
+ * leftImaeg : Left Image url
+ * rightImage : Right Image url
  */
 
-public class Product {
-    private long pid;
-    private String p_name;
-    private int price;
-    private int discount;
-    private boolean on_sale;
-    private int image_id;
-    private String details;
-    private int quantity;
+public class Product implements Serializable {
+    private String sellerId;
+    private String Name;
+    private boolean Sale;
+    private String Description;
+    private int Price;
+    private boolean Availability;
+    private String ProductClass;
+    private String primaryImage;
+    private String leftImage;
+    private String rightImage;
 
-
-    public Product(long pid, String p_name, int price, int discount, boolean on_sale, int image_id, String details, int quantity) {
-        this.pid = pid;
-        this.p_name = p_name;
-        this.price = price;
-        this.discount = discount;
-        this.on_sale = on_sale;
-        this.image_id = image_id;
-        this.details = details;
-        this.quantity = quantity;
+    public Product() {
     }
 
-    public long getPid() {
-        return pid;
+    public Product(String sellerId, String aProduct, boolean sale, String description, int price, boolean availability, String aClass, String primaryImage, String leftImage, String rightImage) {
+        this.sellerId = sellerId;
+        this.Name = aProduct;
+        Sale = sale;
+        Description = description;
+        Price = price;
+        Availability = availability;
+        ProductClass = aClass;
+        this.primaryImage = primaryImage;
+        this.leftImage = leftImage;
+        this.rightImage = rightImage;
     }
 
-    public String getP_name() {
-        return p_name;
+    public String getSellerId() {
+        return sellerId;
+    }
+
+    public void setSellerId(String sellerId) {
+        this.sellerId = sellerId;
+    }
+
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String name) {
+        Name = name;
+    }
+
+    public boolean isSale() {
+        return Sale;
+    }
+
+    public void setSale(boolean sale) {
+        Sale = sale;
+    }
+
+    public String getDescription() {
+        return Description;
+    }
+
+    public void setDescription(String description) {
+        Description = description;
     }
 
     public int getPrice() {
-        return price;
+        return Price;
     }
 
-    public int getDiscount() {
-        return discount;
+    public void setPrice(int price) {
+        Price = price;
     }
 
-    public boolean isOn_sale() {
-        return on_sale;
+    public boolean isAvailability() {
+        return Availability;
     }
 
-    public int getImage_id() {
-        return image_id;
+    public void setAvailability(boolean availability) {
+        Availability = availability;
     }
 
-    public String getDetails() {
-        return details;
+    public String getProductClass() {
+        return ProductClass;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public void setProductClass(String productClass) {
+        ProductClass = productClass;
     }
 
+    public String getPrimaryImage() {
+        return primaryImage;
+    }
+
+    public void setPrimaryImage(String primaryImage) {
+        this.primaryImage = primaryImage;
+    }
+
+    public String getLeftImage() {
+        return leftImage;
+    }
+
+    public void setLeftImage(String leftImage) {
+        this.leftImage = leftImage;
+    }
+
+    public String getRightImage() {
+        return rightImage;
+    }
+
+    public void setRightImage(String rightImage) {
+        this.rightImage = rightImage;
+    }
 }
