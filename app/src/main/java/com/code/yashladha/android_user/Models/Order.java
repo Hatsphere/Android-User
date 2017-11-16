@@ -6,6 +6,7 @@ public class Order {
     private long pay_id;
     private String uid;
     private String order_date;
+    private String del_date;
 
     public Order() {
     }
@@ -16,6 +17,7 @@ public class Order {
         this.pay_id = pay_id;
         this.uid = uid;
         this.order_date = order_date;
+        this.del_date = del_date;
     }
 
 
@@ -29,6 +31,10 @@ public class Order {
 
     public String getUid() {
         return uid;
+    }
+
+    public String getDel_date() {
+        return del_date;
     }
 
     public String getOrder_date() {

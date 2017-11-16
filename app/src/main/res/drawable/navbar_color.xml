@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:state_checked="true"
-        android:color="@color/dark_green" />
-    <item android:color="@color/colorAccent"  />
+        android:color="@color/light" />
+    <item android:color="@color/light"  />
 
 </selector>
