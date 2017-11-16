@@ -59,9 +59,15 @@ public class SignUp extends Fragment {
     public void onStart() {
         super.onStart();
         FirebaseUser currUser = mAuth.getCurrentUser();
+        mAuth.addAuthStateListener(mAuthListener);
         if (currUser != null) {
             Log.i(TITLE, "User logged in already: " + currUser.getUid());
         }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 
     public SignUp() {
@@ -93,9 +99,22 @@ public class SignUp extends Fragment {
         SignUpConfirmPassword.addTextChangedListener(new MyTextWatcher(SignUpConfirmPassword));
         mAuth = FirebaseAuth.getInstance();
 
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    Log.d("User", "User Exists");
+                    sendVerificationEmail();
+                } else {
+                    Log.d("User", "User doesnot exists");
+                }
+            }
+        };
+
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
 
                 unhideProgress();
 
@@ -138,7 +157,8 @@ public class SignUp extends Fragment {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
                                                     Log.d(TITLE, "User pushed");
-                                                    callIntent(uid);
+                                                    Toast.makeText(view.getContext(), "Please verify Email", Toast.LENGTH_SHORT).show();
+                                                    clearFields();
                                                 }
                                             })
                                             .addOnFailureListener(new OnFailureListener() {
@@ -156,6 +176,29 @@ public class SignUp extends Fragment {
             }
         });
         return view;
+    }
+
+    private void Cleanup() {
+        SignUpUsername.setText("");
+        SignUpPassword.setText("");
+        SignUpConfirmPassword.setText("");
+    }
+
+    private void sendVerificationEmail() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            user.sendEmailVerification()
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d(getClass().getSimpleName(), "Email sent");
+                            } else {
+                                Log.e(getClass().getSimpleName(), "Email not sent");
+                            }
+                        }
+                    });
+        }
     }
 
     private void callIntent(String uid) {

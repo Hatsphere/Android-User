@@ -91,7 +91,7 @@ public class Login extends Fragment {
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 unhideProgress();
 
                 if (!validateUserName()) {
@@ -113,10 +113,15 @@ public class Login extends Fragment {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 hideProgress();
                                 if (task.isSuccessful()) {
-                                    String uid = task.getResult().getUser().getUid();
-                                    Log.d(TITLE, "signInWithEmailAndPassword:success " + uid);
-                                    callIntent(uid);
-                                    getActivity().finish();
+                                    FirebaseUser user = task.getResult().getUser();
+                                    if (user.isEmailVerified()) {
+                                        String uid = user.getUid();
+                                        Log.d(TITLE, "signInWithEmailAndPassword:success " + uid);
+                                        callIntent(uid);
+                                        getActivity().finish();
+                                    } else {
+                                        Toast.makeText(view.getContext(), "Email is not verified please verify email", Toast.LENGTH_SHORT).show();
+                                    }
                                 } else {
                                     Log.w(TITLE, "signInWithEmailAndPassword:failure " + task.getException());
                                     Toast.makeText(getActivity(), "Login Failed", Toast.LENGTH_SHORT).show();
