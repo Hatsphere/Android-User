@@ -109,6 +109,7 @@ public class Login extends Fragment {
                                     String uid = task.getResult().getUser().getUid();
                                     Log.d(TITLE, "signInWithEmailAndPassword:success " + uid);
                                     callIntent(uid);
+                                    getActivity().finish();
                                 } else {
                                     Log.w(TITLE, "signInWithEmailAndPassword:failure " + task.getException());
                                     Toast.makeText(getActivity(), "Login Failed", Toast.LENGTH_SHORT).show();
