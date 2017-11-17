@@ -8,10 +8,9 @@
     android:layout_height="match_parent">
 
     <android.support.v7.widget.RecyclerView
-        android:layout_weight="8"
         android:id="@+id/cart_item_list"
         android:layout_width="match_parent"
-        android:layout_height="200dp"/>
+        android:layout_height="400dp"/>
 
     <LinearLayout
         android:orientation="vertical"

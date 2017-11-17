@@ -5,21 +5,54 @@ public class Order {
     private String status;
     private long pay_id;
     private String uid;
+    private int quantity;
+    private String sellerId;
+    private String productName;
     private String order_date;
     private String del_date;
 
     public Order() {
     }
 
-    public Order(String order_id, String status, long pay_id, String uid, String order_date) {
+    public Order(String order_id, String status, long pay_id, String uid, int quantity, String sellerId, String productName, String order_date, String del_date) {
         this.order_id = order_id;
         this.status = status;
         this.pay_id = pay_id;
         this.uid = uid;
+        this.quantity = quantity;
+        this.sellerId = sellerId;
+        this.productName = productName;
         this.order_date = order_date;
         this.del_date = del_date;
     }
 
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getSellerId() {
+        return sellerId;
+    }
+
+    public void setSellerId(String sellerId) {
+        this.sellerId = sellerId;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public void setDel_date(String del_date) {
+        this.del_date = del_date;
+    }
 
     public String getStatus() {
         return status;

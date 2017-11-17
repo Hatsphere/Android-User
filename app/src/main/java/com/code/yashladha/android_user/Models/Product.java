@@ -11,7 +11,7 @@ import java.io.Serializable;
  * Availability : Flag for availability of product
  * ProductClass : Class of Product
  * primaryImage : Primary Image to be shown (url)
- * leftImaeg : Left Image url
+ * leftImage : Left Image url
  * rightImage : Right Image url
  */
 

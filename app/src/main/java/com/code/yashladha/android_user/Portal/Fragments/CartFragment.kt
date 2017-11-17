@@ -90,15 +90,36 @@ class CartFragment : Fragment(), AnkoLogger {
                 }
     }
 
+    private fun cleanCart() {
+        val writeBatch = firestore.batch()
+        for (item in list) {
+            val productRef = firestore.collection(userId + "/cart/Info").document(item.name + "_" + item.sellerId)
+            writeBatch.delete(productRef)
+        }
+
+        writeBatch.commit()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        debug("Cart Cleaned")
+                    } else {
+                        error("Error while cleaning Cart")
+                    }
+                }
+    }
+
     private fun checkout() {
 
         val writeBatch = firestore.batch()
+        val timeStamp = getTimeStamp()
         for (item in list) {
             val orderObject = Order()
 
             orderObject.uid = userId
-            orderObject.order_date = getTimeStamp()
+            orderObject.order_date = timeStamp
             orderObject.status = "Waiting"
+            orderObject.productName = item.name
+            orderObject.sellerId = item.sellerId
+            orderObject.quantity = 1
 
             val orderRef = firestore.collection(item.sellerId + "/orders/waiting").document()
             val userOrderRef = firestore.collection(userId + "/orders/waiting").document(orderRef.id)
@@ -111,6 +132,7 @@ class CartFragment : Fragment(), AnkoLogger {
             if (task.isSuccessful) {
                 debug("Batch write success, cart ordered")
                 toast("Order placed")
+                cleanCart()
                 list.clear()
                 adapter.notifyDataSetChanged()
             } else {

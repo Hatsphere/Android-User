@@ -6,7 +6,6 @@ import android.app.Fragment
 import android.app.FragmentManager
 import android.app.FragmentTransaction
 import android.content.res.Configuration
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.support.v7.app.ActionBarDrawerToggle
@@ -56,6 +55,8 @@ class Index : AppCompatActivity(), AnkoLogger {
 
 
         left_drawer.adapter = listAdapter
+
+        left_drawer.setOnItemClickListener(DrawerClickListener(firestore, baseContext))
 
         mDrawerToggle = object : ActionBarDrawerToggle(this, index_drawer, main_toolbar,
                 R.string.drawer_open, R.string.drawer_closed) {
@@ -151,28 +152,28 @@ class Index : AppCompatActivity(), AnkoLogger {
                 else -> resources.getColor(R.color.home_bottom_color)
             }
 
-            val anim = ViewAnimationUtils.createCircularReveal(view, cx.toInt(), 0, startRadius, endRadius)
-            val anim2 = ViewAnimationUtils.createCircularReveal(appBarLayout, cx2.toInt(), 0, startRadius, endRadius2)
+            val bottomBarAnim = ViewAnimationUtils.createCircularReveal(view, cx.toInt(), 0, startRadius, endRadius)
+            val appBarAnim = ViewAnimationUtils.createCircularReveal(appBarLayout, cx2.toInt(), 0, startRadius, endRadius2)
 
-            anim.addListener(object : AnimatorListenerAdapter() {
+            bottomBarAnim.addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationStart(animation: Animator?) {
                     super.onAnimationStart(animation)
                     view.setBackgroundColor(color)
                 }
             })
 
-            anim2.addListener(object : AnimatorListenerAdapter() {
+            appBarAnim.addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationStart(animation: Animator?) {
                     super.onAnimationStart(animation)
                     appBarLayout.setBackgroundColor(color)
                 }
             })
 
-            anim.duration = 650
-            anim.start()
+            bottomBarAnim.duration = 650
+            bottomBarAnim.start()
 
-            anim2.duration = 650
-            anim2.start()
+            appBarAnim.duration = 650
+            appBarAnim.start()
         }
     }
 

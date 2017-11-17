@@ -25,6 +25,7 @@
                 app:titleEnabled="false">
 
                 <android.support.v7.widget.Toolbar
+                    app:titleTextColor="#fff"
                     android:id="@+id/main_toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
@@ -87,10 +88,10 @@
             android:layout_weight="1.5"
             android:layout_width="280dp"
             android:layout_height="0dp"
-            android:background="@drawable/list_main">
+            android:background="@drawable/fabric_list">
 
             <com.mikhaellopez.circularimageview.CircularImageView
-                android:layout_marginTop="28dp"
+                android:layout_marginTop="32dp"
                 android:layout_width="100dp"
                 android:id="@+id/logo_index"
                 android:layout_height="100dp"
@@ -108,7 +109,7 @@
                 android:text="HATSPHERE"
                 android:textStyle="normal|bold"
                 android:textSize="22sp"
-                android:textColor="#ffc107"
+                android:textColor="#ffd600"
                 android:textColorHighlight="#636060"
                 android:layout_centerInParent="true"
                 android:layout_width="wrap_content"

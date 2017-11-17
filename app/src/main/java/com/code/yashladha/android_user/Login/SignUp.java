@@ -105,7 +105,9 @@ public class SignUp extends Fragment {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     Log.d("User", "User Exists");
-                    sendVerificationEmail();
+                    if (!user.isEmailVerified()) {
+                        sendVerificationEmail();
+                    }
                 } else {
                     Log.d("User", "User doesnot exists");
                 }

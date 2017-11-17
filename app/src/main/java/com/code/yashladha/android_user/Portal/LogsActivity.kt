@@ -28,48 +28,6 @@ class LogsActivity {
 
     fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater!!.inflate(R.layout.fragment_logs, container, false)
-
-        val intent:Intent? = null
-        val strDate: String = intent!!.getStringExtra(LogsFragment().ORDER_DATE)
-        val order_id : String = intent!!.getStringExtra(LogsFragment().ORDER_ID)
-
-        val firestore = FirebaseFirestore.getInstance()
-
-        val itemRef: CollectionReference = firestore.collection("Item")
-        val product: CollectionReference = firestore.collection("Product")
-
-        val query1: Query = itemRef.whereEqualTo("order_id", order_id)
-
-        val task: Task<QuerySnapshot> = query1.get()
-        val sold_products : ArrayList<ProductSold> = ArrayList<ProductSold>()
-
-        if (task.isSuccessful()) {
-
-            val list = task.result.documents
-
-            for (item in list) {
-                val item_no = item.getData()
-                val item_id = item.getId() as Int
-                val pid = item_no.get("pid")
-
-                val query1: Query = product.whereEqualTo("pid", pid)
-                val task: Task<QuerySnapshot> = query1.get()
-
-                val list1 = task.result.documents
-                val product_sold = list1[0].getData()
-                val price = product_sold.get("price") as Int
-                val p_name = product_sold.get("p_name") as String
-                val image_id = product_sold.get("image_id") as Int
-                val soldProduct = ProductSold(item_id,image_id, price, p_name)
-
-                sold_products!!.add(soldProduct)
-
-            }
-            val adapter = LogDetailAdapter(this.activity,sold_products,0)
-            val listView = list as ListView
-            listView!!.setAdapter(adapter)
-
-        }
         return view
     }
 }

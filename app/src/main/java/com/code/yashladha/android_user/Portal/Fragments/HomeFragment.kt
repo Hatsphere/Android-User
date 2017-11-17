@@ -17,6 +17,7 @@ import com.code.yashladha.android_user.R
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_home.view.*
+import kotlinx.coroutines.experimental.channels.produce
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.debug
 import org.jetbrains.anko.info
@@ -75,6 +76,12 @@ class HomeFragment : Fragment(), AnkoLogger {
             info(products.size)
             interestedProducts.addAll(products)
             interestedThingsAdap.notifyDataSetChanged()
+        })
+
+        ProductHelper.getTrendingProducts(sellerRef, firestore, mContext, ProductCallback{products, context ->
+            debug("Comes under Trending callback")
+            trendingProducts.addAll(products)
+            trendingThingsAdap.notifyDataSetChanged()
         })
 
         return view

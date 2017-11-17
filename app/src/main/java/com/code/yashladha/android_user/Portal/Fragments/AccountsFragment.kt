@@ -36,6 +36,7 @@ import kotlinx.android.synthetic.main.account_name_popup.*
 import kotlinx.android.synthetic.main.account_name_popup.view.*
 import kotlinx.android.synthetic.main.fragment_accounts.*
 import kotlinx.android.synthetic.main.fragment_accounts.view.*
+import org.jetbrains.anko.toast
 import java.io.File
 
 /**
@@ -139,6 +140,7 @@ class AccountsFragment : Fragment() {
                                     .addOnSuccessListener {
                                         bar!!.visibility = INVISIBLE
                                         Log.i("profileImageRef", "Image uploaded successfully")
+                                        toast("Image uploaded successfully")
 
                                     }
                                     .addOnFailureListener {
