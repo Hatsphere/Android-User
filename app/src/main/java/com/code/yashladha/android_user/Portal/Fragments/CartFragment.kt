@@ -81,6 +81,9 @@ class CartFragment : Fragment(), AnkoLogger {
                                 .map { it.toObject(Product::class.java) }
                                 .forEach { list.add(it) }
                         adapter.notifyDataSetChanged()
+                        val price = getPrice()
+                        totalCost!!.setText(price.toString())
+
                     } else {
                         debug(task.exception)
                     }
@@ -88,6 +91,14 @@ class CartFragment : Fragment(), AnkoLogger {
                 .addOnFailureListener { exception ->
                     exception.stackTrace
                 }
+    }
+
+    private fun getPrice(): Int {
+        var priceMoney: Int = 0
+        for (item in list) {
+            priceMoney += item.price * item.quantity
+        }
+        return priceMoney
     }
 
     /**

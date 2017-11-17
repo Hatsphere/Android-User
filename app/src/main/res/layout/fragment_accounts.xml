@@ -96,7 +96,7 @@
                     android:clickable="true"
                     android:id="@+id/account_iv_name"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_create_black_24dp"
+                    android:src="@drawable/personal_accessories"
                     android:layout_weight="2"
                     android:tint="#1b5e20"
                     android:layout_width="0dp"

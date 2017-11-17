@@ -36,6 +36,7 @@ class CartItemListAdapter(val items: ArrayList<Product>, val context: Context) :
                     .fit()
                     .into(itemView.cart_item_product_image)
             val priceValue = "Rs. " + item.price.toString()
+            itemView.cart_quantity.text = item.quantity.toString()
             itemView.cart_item_price.text = priceValue
         }
     }

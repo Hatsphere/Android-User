@@ -17,6 +17,7 @@ import java.io.Serializable;
 
 public class Product implements Serializable {
     private String sellerId;
+    private int quantity;
     private String Name;
     private boolean Sale;
     private String Description;
@@ -34,6 +35,7 @@ public class Product implements Serializable {
         this.sellerId = sellerId;
         this.Name = aProduct;
         Sale = sale;
+        this.quantity = 1;
         Description = description;
         Price = price;
         Availability = availability;
@@ -41,6 +43,14 @@ public class Product implements Serializable {
         this.primaryImage = primaryImage;
         this.leftImage = leftImage;
         this.rightImage = rightImage;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public String getSellerId() {
