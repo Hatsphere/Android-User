@@ -23,7 +23,6 @@ import org.jetbrains.anko.info
 import org.jetbrains.anko.toast
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 /**
  * Created by yashladha on 17/10/17.
