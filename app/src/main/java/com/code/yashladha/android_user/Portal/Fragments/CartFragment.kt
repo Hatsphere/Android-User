@@ -90,6 +90,10 @@ class CartFragment : Fragment(), AnkoLogger {
                 }
     }
 
+    /**
+     * Function to clean the cart after the checkout
+     * The clean operation is performed using batch write
+     */
     private fun cleanCart() {
         val writeBatch = firestore.batch()
         for (item in list) {
