@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.code.yashladha.android_user.Models.Product
 import com.code.yashladha.android_user.Models.TrendingObject
+import com.code.yashladha.android_user.R.id.quantity
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
@@ -16,7 +17,8 @@ import kotlin.collections.ArrayList
 
 class ProductHelper {
     companion object {
-        fun getProductInterested(sellerReference: CollectionReference,
+        fun getProductInterested(interestedProducts: ArrayList<Product>,
+                                 sellerReference: CollectionReference,
                                  firebase: FirebaseFirestore,
                                  context: Context,
                                  callback: ProductCallback) {
@@ -28,7 +30,6 @@ class ProductHelper {
                     sellerId
                             .map { firebase.collection(it + "/Products/Info") }
                             .forEach {
-                                val sellerProducts = ArrayList<Product>()
 
                                 it.get().addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
@@ -36,11 +37,11 @@ class ProductHelper {
                                         for (item in task.result) {
                                             val data = item.data
 
-                                            if (sellerProducts.size < 16) {
-                                                sellerProducts.add(ExtractProduct(sellerIdInfo, item.id, data))
+                                            if (interestedProducts.size < 16) {
+                                                interestedProducts.add(ExtractProduct(sellerIdInfo, item.id, data))
                                             }
                                         }
-                                        callback.updateProductUI(sellerProducts, context)
+                                        callback.updateProductUI(context)
                                     }
                                 }
                             }
@@ -73,7 +74,8 @@ class ProductHelper {
             )
         }
 
-        fun getTrendingProducts(sellerReference: CollectionReference,
+        fun getTrendingProducts(mainProducts: ArrayList<Product>,
+                                sellerReference: CollectionReference,
                                 firebase: FirebaseFirestore,
                                 context: Context,
                                 callback: ProductCallback) {
@@ -85,33 +87,35 @@ class ProductHelper {
                     Log.d("Complete Listener", "Seller fetched successfully")
                     task.result.mapTo(sellerdId) { it.id }
                     sellerdId
-                            .map { firebase.collection(it + "/orders/waiting") }
+                            .map { firebase.collection(it + "/count/Info") }
                             .forEach {
 
                                 it.get().addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
-                                        val products = ArrayList<Product>()
-                                        val trendingObjects = ArrayList<TrendingObject>()
+                                        var trendingObjects = ArrayList<TrendingObject>()
+                                        val sellerId = it.parent.parent.id
                                         for (item in task.result) {
+                                            val id = item.id
                                             val data = item.data
-                                            if (data.get("productName") != null) {
-                                                val pName = data.get("productName") as String
-                                                val quantity = data.get("quantity") as Long
-                                                val sellerId = data.get("sellerId") as String
-
-                                                trendingObjects.add(TrendingObject(pName, quantity, sellerId))
+                                            if (data.get("itemSold") != null) {
+                                                val count = data.get("itemSold") as Long
+                                                trendingObjects.add(TrendingObject(id, count, sellerId))
                                             }
                                         }
-                                        trendingObjects.sortedWith(compareBy({ it.quantity }))
+                                        trendingObjects = ArrayList(trendingObjects.sortedWith(compareBy({ it.soldItems })))
+                                        Log.d("Trending", trendingObjects.toString())
                                         for (item in trendingObjects) {
                                             val productRef = firebase.document(item.sellerId + "/Products/Info/" + item.productName)
                                             productRef.get()
                                                     .addOnCompleteListener { task2 ->
                                                         if (task2.isSuccessful) {
+                                                            Log.d("Item", item.productName + " " + item.soldItems)
                                                             val result = task2.result
                                                             Log.i("Result Id: ", result.id)
-                                                            products.add(ExtractProduct(item.sellerId, item.productName, result.data))
-                                                            callback.updateProductUI(products, context)
+                                                            val tempProduct = ExtractProduct(item.sellerId, item.productName, result.data)
+                                                            tempProduct.quantity = item.soldItems.toString().toInt()
+                                                            mainProducts.add(tempProduct)
+                                                            callback.updateProductUI(context)
                                                         }
                                                     }
                                         }

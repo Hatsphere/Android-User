@@ -7,16 +7,16 @@ package com.code.yashladha.android_user.Models;
 
 public class TrendingObject {
 
-    private String productName;
-    private Long quantity;
-    private String sellerId;
+   private String productName;
+   private Long soldItems;
+   private String sellerId;
 
     public TrendingObject() {
     }
 
-    public TrendingObject(String productName, Long quantity, String sellerId) {
+    public TrendingObject(String productName, Long soldItems, String sellerId) {
         this.productName = productName;
-        this.quantity = quantity;
+        this.soldItems = soldItems;
         this.sellerId = sellerId;
     }
 
@@ -28,12 +28,12 @@ public class TrendingObject {
         this.productName = productName;
     }
 
-    public Long getQuantity() {
-        return quantity;
+    public Long getSoldItems() {
+        return soldItems;
     }
 
-    public void setQuantity(Long quantity) {
-        this.quantity = quantity;
+    public void setSoldItems(Long soldItems) {
+        this.soldItems = soldItems;
     }
 
     public String getSellerId() {

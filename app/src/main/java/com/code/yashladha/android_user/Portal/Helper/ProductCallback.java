@@ -13,5 +13,5 @@ import java.util.HashMap;
  */
 
 public interface ProductCallback {
-    void updateProductUI (ArrayList<Product> products, Context context);
+    void updateProductUI (Context context);
 }

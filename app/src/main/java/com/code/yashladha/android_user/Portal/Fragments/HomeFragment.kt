@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,10 +18,8 @@ import com.code.yashladha.android_user.R
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_home.view.*
-import kotlinx.coroutines.experimental.channels.produce
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.debug
-import org.jetbrains.anko.info
 
 /**
  * Created by yashladha on 17/10/17.
@@ -71,17 +70,18 @@ class HomeFragment : Fragment(), AnkoLogger {
         interestedThingsRv.adapter = interestedThingsAdap
         trendingRv.adapter = trendingThingsAdap
 
-        ProductHelper.getProductInterested(sellerRef, firestore, mContext, ProductCallback { products, context ->
+        ProductHelper.getProductInterested(interestedProducts, sellerRef, firestore, mContext, ProductCallback { context ->
             debug("Comes under Callback")
-            info(products.size)
-            interestedProducts.addAll(products)
             interestedThingsAdap.notifyDataSetChanged()
         })
 
-        ProductHelper.getTrendingProducts(sellerRef, firestore, mContext, ProductCallback{products, context ->
+        ProductHelper.getTrendingProducts(trendingProducts, sellerRef, firestore, mContext, ProductCallback{ context ->
             debug("Comes under Trending callback")
-            trendingProducts.addAll(products)
-            trendingProducts.sortedWith(compareBy({ it.quantity }))
+            debug { "Item Size " + trendingProducts.size }
+            for (item in trendingProducts) {
+                Log.i("Info", item.name)
+            }
+            Log.d("Order", trendingProducts.toString())
             trendingThingsAdap.notifyDataSetChanged()
         })
 
