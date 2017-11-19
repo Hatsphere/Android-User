@@ -1,64 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="88dp"
-    >
 
-    <ImageView
-        android:layout_width="88dp"
-        android:layout_height="88dp"
-        android:id="@+id/image" />
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="88dp"
-        android:paddingLeft="16dp"
-        android:id="@+id/text_container"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_toRightOf="@id/image"
+        android:layout_height="100dp"
+        android:orientation="horizontal"
+        android:id="@+id/linearLayout1"
+        android:weightSum="1"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp">
 
-        >
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/order"
+            android:id="@+id/ivProduct"
+            android:scaleType="fitXY" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="bottom"
-            android:id="@+id/pname"
-            android:textStyle="bold"
-            android:textColor="@android:color/white" />
+        <LinearLayout
+            android:layout_width="140dp"
+            android:layout_height="match_parent"
+            android:id="@+id/linearLayout2"
+            android:layout_toRightOf="@+id/ivProduct"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:orientation="vertical"
+            android:paddingRight="10dp"
+            android:layout_weight="0.98">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:id="@+id/price"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="top"
-            android:textStyle="bold"
-            android:textColor="@android:color/white" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Product Name"
+                android:textStyle="bold"
+                android:textSize="15dp"
+                android:id="@+id/tvProductName"
+                android:textColor="@android:color/holo_green_dark"
+                android:layout_marginBottom="5dp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:id="@+id/quantity"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="top"
-            android:textStyle="bold"
-            android:textColor="@android:color/white" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Price"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="5dp"
+                android:textStyle="bold"
+                android:textSize="15dp"
+                android:id="@+id/tvPrice" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:id="@+id/purchase_date"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="top"
-            android:textStyle="bold"
-            android:textColor="@android:color/white" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Purchase/Exchange/Refund"
+                android:layout_marginBottom="5dp"
+                android:textSize="15dp"
+                android:id="@+id/tvTypeOfRequest" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:id="@+id/linearLayout5">
+
+        </LinearLayout>
+
     </LinearLayout>
 
-</RelativeLayout>
+</FrameLayout>
