@@ -1,6 +1,7 @@
 package com.code.yashladha.android_user.Login;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,15 +20,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.code.yashladha.android_user.Portal.Index;
 import com.code.yashladha.android_user.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,6 +48,8 @@ public class Login extends Fragment {
     private TextInputLayout PasswordLayout;
     private EditText LoginUsername;
     private EditText LoginPassword;
+    private TextView ForgotPassword;
+    private Context mContext;
     private Button login;
     private ProgressBar progressBar;
     private LinearLayout mainLayout;
@@ -76,6 +83,8 @@ public class Login extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login, container, false);
+        mContext = view.getContext();
+        ForgotPassword = view.findViewById(R.id.login_forgot_password);
         UsernameLayout = view.findViewById(R.id.login_layout_username);
         PasswordLayout = view.findViewById(R.id.login_layout_password);
         LoginUsername = view.findViewById(R.id.login_username);
@@ -132,7 +141,42 @@ public class Login extends Fragment {
             }
         });
 
+        ForgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String textEmail = LoginUsername.getText().toString();
+                if (Objects.equals(textEmail, "")) {
+                    Toast.makeText(mContext, "Please enter the username (email): ", Toast.LENGTH_SHORT).show();
+                    clearUsernameError();
+                } else if (!validateUserName()){
+                    Toast.makeText(mContext, "Username is not valid, please enter correct one", Toast.LENGTH_SHORT).show();
+                    clearUsernameError();
+                } else {
+                    mAuth.sendPasswordResetEmail(textEmail)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(mContext, "Password reset mail sent", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(mContext, "Password reset mail not sent", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
+            }
+        });
+
         return view;
+    }
+
+    private void clearUsernameError() {
+        LoginUsername.setText("");
+        UsernameLayout.setErrorEnabled(false);
     }
 
     private void callIntent(String uid) {
