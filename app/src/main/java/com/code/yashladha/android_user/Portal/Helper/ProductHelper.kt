@@ -49,7 +49,7 @@ class ProductHelper {
             }
         }
 
-        private fun ExtractProduct(sellerId: String, productName: String, data: Map<String, Any>): Product {
+        fun ExtractProduct(sellerId: String, productName: String, data: Map<String, Any>): Product {
             val sale = data.get("Sale") as Boolean
             val description = data.get("Description") as String
             val price = data.get("Price") as String

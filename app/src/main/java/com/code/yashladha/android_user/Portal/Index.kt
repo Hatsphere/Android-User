@@ -13,11 +13,11 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.view.ViewAnimationUtils
+import android.widget.AdapterView
+import com.code.yashladha.android_user.Models.Filter
 import com.code.yashladha.android_user.Portal.Adapter.ListItemAdapter
-import com.code.yashladha.android_user.Portal.Fragments.AccountsFragment
-import com.code.yashladha.android_user.Portal.Fragments.CartFragment
-import com.code.yashladha.android_user.Portal.Fragments.HomeFragment
-import com.code.yashladha.android_user.Portal.Fragments.LogsFragment
+import com.code.yashladha.android_user.Portal.Fragments.*
+import com.code.yashladha.android_user.Portal.Helper.FilterCallback
 import com.code.yashladha.android_user.Portal.Model.ListItem
 import com.code.yashladha.android_user.R
 import com.code.yashladha.android_user.R.id.*
@@ -56,7 +56,18 @@ class Index : AppCompatActivity(), AnkoLogger {
 
         left_drawer.adapter = listAdapter
 
-        left_drawer.setOnItemClickListener(DrawerClickListener(firestore, baseContext))
+        left_drawer.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+            mTitle = "Filter"
+            Log.i("Position selected", position.toString())
+            index_drawer.closeDrawers()
+            when (position) {
+                0 -> HomeDecorFilter()
+                1 -> PersonalAccessoriesFilter()
+                2 -> GiftsFilter()
+                3 -> PaintingsFilter()
+                4 -> OtherFilter()
+            }
+        }
 
         mDrawerToggle = object : ActionBarDrawerToggle(this, index_drawer, main_toolbar,
                 R.string.drawer_open, R.string.drawer_closed) {
@@ -177,6 +188,68 @@ class Index : AppCompatActivity(), AnkoLogger {
         }
     }
 
+    fun OtherFilter() {
+
+        val fragment: Fragment = FilterFrag()
+
+        getFilterData("Other", FilterCallback { logs ->
+            passFilter(logs, fragment)
+        })
+    }
+
+    private fun passFilter(logs: java.util.ArrayList<Filter>?, fragment: Fragment) {
+        val bundle = Bundle()
+        bundle.putSerializable("Filters", logs)
+        fragment.arguments = bundle
+        fragmentManager.inTransaction {
+            replace(R.id.frame_content_main, fragment, "Filter")
+        }
+    }
+
+    fun PaintingsFilter() {
+        val fragment: Fragment = FilterFrag()
+
+        getFilterData("Paintings/Wall Hangings", FilterCallback { logs ->
+            passFilter(logs, fragment)
+        })
+    }
+
+    fun GiftsFilter() {
+        val fragment: Fragment = FilterFrag()
+
+        getFilterData("Gifts", FilterCallback { logs ->
+            passFilter(logs, fragment)
+        })
+    }
+
+    fun PersonalAccessoriesFilter() {
+        val fragment: Fragment = FilterFrag()
+
+        getFilterData("Personal Accessories", FilterCallback { logs ->
+            passFilter(logs, fragment)
+        })
+    }
+
+    private fun HomeDecorFilter() {
+        val fragment: Fragment = FilterFrag()
+
+        getFilterData("Home Decor", FilterCallback { logs ->
+            passFilter(logs, fragment)
+        })
+    }
+
+    fun getFilterData(type: String, callback: FilterCallback) {
+        Log.i("Type tag", type)
+        val typeCollectionRef = firestore.collection(type)
+
+        typeCollectionRef.get()
+                .addOnCompleteListener { task ->
+                    val result = task.result
+                    val filterObj = ArrayList<Filter>()
+                    result.mapTo(filterObj) { Filter(it.id, it.data.get("uid").toString(), it.data.get("planId").toString()) }
+                    callback.updateFilterUI(filterObj)
+                }
+    }
 
     private fun bottomBarOptionSelected(id: Int) {
         val fragment: Fragment = when (id) {
@@ -214,6 +287,7 @@ class Index : AppCompatActivity(), AnkoLogger {
         super.onConfigurationChanged(newConfig)
         mDrawerToggle!!.onConfigurationChanged(newConfig)
     }
+
 }
 
 inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> FragmentTransaction) {

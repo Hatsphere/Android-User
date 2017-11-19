@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.log_item.view.*
 
 /**
  * Created by yashladha on 19/11/17.
+ * Log Adapter for showing the order placed Log
  */
 
 class LogsAdapter(val logsList: ArrayList<Logs>, val context: Context) : RecyclerView.Adapter<LogsAdapter.ViewHolder>() {
