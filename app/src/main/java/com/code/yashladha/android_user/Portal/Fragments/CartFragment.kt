@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.fragment_cart.view.*
 import org.jetbrains.anko.*
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 /**
  * Created by yashladha on 17/10/17.
@@ -121,6 +122,12 @@ class CartFragment : Fragment(), AnkoLogger {
 
         val writeBatch = firestore.batch()
         val timeStamp = getTimeStamp()
+        val logRef = firestore.collection(userId + "/logs/orderPlaced").document(timeStamp)
+
+        val logObj = HashMap<String, Any>()
+
+        logObj.put("Quantity", list.size.toString())
+
         for (item in list) {
             val orderObject = Order()
 
@@ -129,7 +136,7 @@ class CartFragment : Fragment(), AnkoLogger {
             orderObject.status = "Waiting"
             orderObject.productName = item.name
             orderObject.sellerId = item.sellerId
-            orderObject.quantity = 1
+            orderObject.quantity = item.quantity
 
             val orderRef = firestore.collection(item.sellerId + "/orders/waiting").document()
             val userOrderRef = firestore.collection(userId + "/orders/waiting").document(orderRef.id)
@@ -138,17 +145,18 @@ class CartFragment : Fragment(), AnkoLogger {
             firestore.runTransaction({ transaction ->
                 val snap = transaction.get(transactionRef)
                 var count = snap.get("itemSold") as Long
-                count += 1
+                count += item.quantity
                 transaction.update(transactionRef, "itemSold", count)
             }).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    debug { "Transaction compleetd" }
+                    debug { "Transaction completed" }
                 } else {
                     error { "Transaction incomplete" }
                 }
             }
 
             orderObject.order_id = orderRef.id
+            writeBatch.set(logRef, logObj)
             writeBatch.set(userOrderRef, orderObject)
             writeBatch.set(orderRef, orderObject)
         }

@@ -78,6 +78,7 @@ class HomeFragment : Fragment(), AnkoLogger {
         ProductHelper.getTrendingProducts(trendingProducts, sellerRef, firestore, mContext, ProductCallback{ context ->
             debug("Comes under Trending callback")
             debug { "Item Size " + trendingProducts.size }
+            trendingProducts = ArrayList(trendingProducts.sortedWith(compareByDescending { it.quantity }))
             for (item in trendingProducts) {
                 Log.i("Info", item.name)
             }

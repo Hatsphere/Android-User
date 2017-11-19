@@ -102,7 +102,10 @@ class ProductHelper {
                                                 trendingObjects.add(TrendingObject(id, count, sellerId))
                                             }
                                         }
-                                        trendingObjects = ArrayList(trendingObjects.sortedWith(compareBy({ it.soldItems })))
+                                        trendingObjects = ArrayList(trendingObjects.sortedWith(compareByDescending ({ it.soldItems })))
+                                        for (item in trendingObjects) {
+                                            Log.d("ItemSold", item.soldItems.toString() + " " + item.productName)
+                                        }
                                         Log.d("Trending", trendingObjects.toString())
                                         for (item in trendingObjects) {
                                             val productRef = firebase.document(item.sellerId + "/Products/Info/" + item.productName)
