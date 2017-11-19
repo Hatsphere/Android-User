@@ -52,6 +52,7 @@ class HomeIndexAdapter(private val items: ArrayList<Product>, val context: Conte
             }
             itemView.item_card.setOnClickListener{ v ->
                 val intent = Intent(v.context, ProductDetail::class.java)
+                item.quantity = 1
                 intent.putExtra("Product", item)
                 v.context.startActivity(intent)
             }

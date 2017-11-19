@@ -59,7 +59,7 @@ class CartFragment : Fragment(), AnkoLogger {
         itemList!!.layoutManager = lm
         itemList!!.setHasFixedSize(true)
 
-        adapter = CartItemListAdapter(list, view.context)
+        adapter = CartItemListAdapter(userId, firestore, list, view.context, view)
         itemList!!.adapter = adapter
 
         view.cart_checkout_btn.setOnClickListener {
