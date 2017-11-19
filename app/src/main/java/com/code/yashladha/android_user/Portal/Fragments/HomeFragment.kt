@@ -81,6 +81,7 @@ class HomeFragment : Fragment(), AnkoLogger {
         ProductHelper.getTrendingProducts(sellerRef, firestore, mContext, ProductCallback{products, context ->
             debug("Comes under Trending callback")
             trendingProducts.addAll(products)
+            trendingProducts.sortedWith(compareBy({ it.quantity }))
             trendingThingsAdap.notifyDataSetChanged()
         })
 

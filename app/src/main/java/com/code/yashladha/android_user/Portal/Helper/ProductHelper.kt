@@ -87,11 +87,11 @@ class ProductHelper {
                     sellerdId
                             .map { firebase.collection(it + "/orders/waiting") }
                             .forEach {
-                                val trendingObjects = ArrayList<TrendingObject>()
-                                val products = ArrayList<Product>()
 
                                 it.get().addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
+                                        val products = ArrayList<Product>()
+                                        val trendingObjects = ArrayList<TrendingObject>()
                                         for (item in task.result) {
                                             val data = item.data
                                             if (data.get("productName") != null) {

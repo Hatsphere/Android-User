@@ -29,10 +29,17 @@ class CartItemListAdapter(val items: ArrayList<Product>, val context: Context) :
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(item: Product) = with(itemView) {
             itemView.tv_cart_item_name.text = item.name
-            Picasso.with(context)
-                    .load(item.primaryImage)
-                    .fit()
-                    .into(itemView.cart_item_product_image)
+            if (item.primaryImage != "") {
+                Picasso.with(context)
+                        .load(item.primaryImage)
+                        .fit()
+                        .into(itemView.cart_item_product_image)
+            } else {
+                Picasso.with(context)
+                        .load(R.drawable.logo)
+                        .fit()
+                        .into(itemView.cart_item_product_image)
+            }
             val priceValue = "Rs. " + item.price.toString()
             itemView.cart_quantity.text = item.quantity.toString()
 

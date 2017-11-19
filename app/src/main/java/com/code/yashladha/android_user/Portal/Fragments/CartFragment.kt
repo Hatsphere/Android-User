@@ -15,12 +15,11 @@ import com.code.yashladha.android_user.Models.Product
 import com.code.yashladha.android_user.Portal.Adapter.CartItemListAdapter
 import com.code.yashladha.android_user.R
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Transaction
 import kotlinx.android.synthetic.main.fragment_cart.view.*
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.debug
-import org.jetbrains.anko.info
-import org.jetbrains.anko.toast
+import org.jetbrains.anko.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -80,8 +79,7 @@ class CartFragment : Fragment(), AnkoLogger {
                                 .map { it.toObject(Product::class.java) }
                                 .forEach { list.add(it) }
                         adapter.notifyDataSetChanged()
-                        val price = getPrice()
-                        totalCost!!.setText(price.toString())
+                        updatePrice()
 
                     } else {
                         debug(task.exception)
@@ -92,13 +90,12 @@ class CartFragment : Fragment(), AnkoLogger {
                 }
     }
 
-    private fun getPrice(): Int {
-        var priceMoney: Int = 0
-        for (item in list) {
-            priceMoney += item.price * item.quantity
-        }
-        return priceMoney
+    private fun updatePrice() {
+        val price = getPrice()
+        totalCost!!.text = price.toString()
     }
+
+    private fun getPrice(): Int = list.sumBy { it.price * it.quantity }
 
     /**
      * Function to clean the cart after the checkout
@@ -106,10 +103,9 @@ class CartFragment : Fragment(), AnkoLogger {
      */
     private fun cleanCart() {
         val writeBatch = firestore.batch()
-        for (item in list) {
-            val productRef = firestore.collection(userId + "/cart/Info").document(item.name + "_" + item.sellerId)
-            writeBatch.delete(productRef)
-        }
+        list
+                .map { firestore.collection(userId + "/cart/Info").document(it.name + "_" + it.sellerId) }
+                .forEach { writeBatch.delete(it) }
 
         writeBatch.commit()
                 .addOnCompleteListener { task ->
@@ -137,6 +133,21 @@ class CartFragment : Fragment(), AnkoLogger {
 
             val orderRef = firestore.collection(item.sellerId + "/orders/waiting").document()
             val userOrderRef = firestore.collection(userId + "/orders/waiting").document(orderRef.id)
+            val transactionRef = firestore.document(item.sellerId + "/count/Info/" + item.name)
+
+            firestore.runTransaction({ transaction ->
+                val snap = transaction.get(transactionRef)
+                var count = snap.get("itemSold") as Long
+                count += 1
+                transaction.update(transactionRef, "itemSold", count)
+            }).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    debug { "Transaction compleetd" }
+                } else {
+                    error { "Transaction incomplete" }
+                }
+            }
+
             orderObject.order_id = orderRef.id
             writeBatch.set(userOrderRef, orderObject)
             writeBatch.set(orderRef, orderObject)

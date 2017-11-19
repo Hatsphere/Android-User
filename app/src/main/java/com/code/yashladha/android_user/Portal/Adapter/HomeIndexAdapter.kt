@@ -30,11 +30,19 @@ class HomeIndexAdapter(private val items: ArrayList<Product>, val context: Conte
     class ViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(item: Product) = with(itemView) {
-            Picasso
-                    .with(context)
-                    .load(item.primaryImage)
-                    .fit()
-                    .into(itemView.item_product_image)
+            if (item.primaryImage != "") {
+                Picasso
+                        .with(context)
+                        .load(item.primaryImage)
+                        .fit()
+                        .into(itemView.item_product_image)
+            } else {
+                Picasso
+                        .with(context)
+                        .load(R.drawable.logo)
+                        .fit()
+                        .into(itemView.item_product_image)
+            }
             itemView.item_product_name.text = item.name
             if (!item.isAvailability) {
                 itemView.item_available_text.text = "Not Available"
