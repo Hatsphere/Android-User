@@ -209,7 +209,7 @@ class Index : AppCompatActivity(), AnkoLogger {
     fun PaintingsFilter() {
         val fragment: Fragment = FilterFrag()
 
-        getFilterData("Paintings/Wall Hangings", FilterCallback { logs ->
+        getFilterData("Paintings", FilterCallback { logs ->
             passFilter(logs, fragment)
         })
     }
