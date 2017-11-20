@@ -64,9 +64,11 @@ class FilterFrag : Fragment() {
                     .get()
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            val data = task.result.data
-                            products.add(ProductHelper.ExtractProduct(sellerId, itemName, data))
-                            adapter_.notifyDataSetChanged()
+                            if (task.result.exists()) {
+                                val data = task.result.data
+                                products.add(ProductHelper.ExtractProduct(sellerId, itemName, data))
+                                adapter_.notifyDataSetChanged()
+                            }
                         }
                     }
         }
