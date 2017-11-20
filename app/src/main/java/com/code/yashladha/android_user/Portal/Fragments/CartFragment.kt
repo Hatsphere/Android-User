@@ -123,7 +123,7 @@ class CartFragment : Fragment(), AnkoLogger {
 
         val writeBatch = firestore.batch()
         val timeStamp = getTimeStamp()
-        val logRef = firestore.collection(userId + "/logs/orderPlaced").document(timeStamp)
+        val logRef = firestore.document(userId + "/logs/orderPlaced/" + timeStamp)
 
         val logObj = HashMap<String, Any>()
 
