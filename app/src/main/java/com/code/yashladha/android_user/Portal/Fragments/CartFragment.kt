@@ -1,11 +1,10 @@
 package com.code.yashladha.android_user.Portal.Fragments
 
 import android.app.Fragment
-import android.icu.text.SimpleDateFormat
-import android.os.Build
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,11 +14,10 @@ import com.code.yashladha.android_user.Models.Product
 import com.code.yashladha.android_user.Portal.Adapter.CartItemListAdapter
 import com.code.yashladha.android_user.R
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Transaction
 import kotlinx.android.synthetic.main.fragment_cart.view.*
 import org.jetbrains.anko.*
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -178,17 +176,8 @@ class CartFragment : Fragment(), AnkoLogger {
 
     private fun getTimeStamp(): String {
         var timestamp = ""
-        val simpleDateFormat = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            SimpleDateFormat("dd-MM-yyyy-hh-mm-ss")
-        } else {
-            null
-        }
-
-        if (simpleDateFormat != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                timestamp = simpleDateFormat.format(Date())
-            }
-        }
+        val simpleDateFormat = SimpleDateFormat("dd-MM-yyyy-hh-mm-ss")
+        timestamp = simpleDateFormat.format(Date())
         return timestamp
     }
 
