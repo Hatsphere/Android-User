@@ -112,6 +112,7 @@ class CartFragment : Fragment(), AnkoLogger {
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         debug("Cart Cleaned")
+                        totalCost!!.text = "0"
                     } else {
                         error("Error while cleaning Cart")
                     }
