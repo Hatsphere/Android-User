@@ -64,7 +64,8 @@ class ProductDetail : AppCompatActivity(), AnkoLogger {
                 .get()
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        sellerInfo = task.result.toObject(Seller::class.java)
+                        val result = task.result
+                        sellerInfo = ExtractSeller(result.data)
                         Picasso.with(baseContext)
                                 .load(sellerInfo.profileImage)
                                 .fit()
@@ -84,6 +85,10 @@ class ProductDetail : AppCompatActivity(), AnkoLogger {
         }
 
         detail_description.text = item.description
+    }
+
+    private fun ExtractSeller(data: Map<String, Any>): Seller {
+        return Seller(data.get("address").toString(), data.get("contactNo").toString(), data.get("Name").toString(), data.get("planChosen").toString(), data.get("profileImage").toString())
     }
 
     private fun AddToCart() {

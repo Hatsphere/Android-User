@@ -10,10 +10,10 @@ public class Seller {
     private String Address;
     private String ContactNo;
     private String Name;
-    private Long PlanChosen;
+    private String PlanChosen;
     private String profileImage;
 
-    public Seller(String address, String contactNo, String name, Long planChosen, String profileImage) {
+    public Seller(String address, String contactNo, String name, String planChosen, String profileImage) {
         Address = address;
         ContactNo = contactNo;
         Name = name;
@@ -48,11 +48,11 @@ public class Seller {
         Name = name;
     }
 
-    public Long getPlanChosen() {
+    public String getPlanChosen() {
         return PlanChosen;
     }
 
-    public void setPlanChosen(Long planChosen) {
+    public void setPlanChosen(String planChosen) {
         PlanChosen = planChosen;
     }
 

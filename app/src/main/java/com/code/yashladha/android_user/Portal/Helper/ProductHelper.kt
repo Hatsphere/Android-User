@@ -115,10 +115,12 @@ class ProductHelper {
                                                             Log.d("Item", item.productName + " " + item.soldItems)
                                                             val result = task2.result
                                                             Log.i("Result Id: ", result.id)
-                                                            val tempProduct = ExtractProduct(item.sellerId, item.productName, result.data)
-                                                            tempProduct.quantity = item.soldItems.toString().toInt()
-                                                            mainProducts.add(tempProduct)
-                                                            callback.updateProductUI(context)
+                                                            if (result.exists()) {
+                                                                val tempProduct = ExtractProduct(item.sellerId, item.productName, result.data)
+                                                                tempProduct.quantity = item.soldItems.toString().toInt()
+                                                                mainProducts.add(tempProduct)
+                                                                callback.updateProductUI(context)
+                                                            }
                                                         }
                                                     }
                                         }

@@ -9,7 +9,9 @@ import android.view.ViewGroup
 import com.code.yashladha.android_user.Models.Product
 import com.code.yashladha.android_user.Portal.ProductDetail
 import com.code.yashladha.android_user.R
+import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_product_detail.*
 import kotlinx.android.synthetic.main.item_display.view.*
 
 /**
@@ -50,6 +52,19 @@ class HomeIndexAdapter(private val items: ArrayList<Product>, val context: Conte
             } else {
                 itemView.item_available_text.text = "Available"
             }
+            val id = item.sellerId
+
+            val firestore = FirebaseFirestore.getInstance()
+
+            firestore.document("seller/registered/Info/" + id)
+                    .get()
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            val result = task.result
+                            itemView.item_seller_name_tv.text = result.get("Name").toString()
+                        }
+                    }
+
             itemView.item_card.setOnClickListener{ v ->
                 val intent = Intent(v.context, ProductDetail::class.java)
                 item.quantity = 1
